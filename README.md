@@ -72,10 +72,11 @@ The declared-width range is 17 through 42 qubits: 16 system qubits plus at
 least one workspace/control wire, up to the full 42-qubit block-encoding
 construction. No compression or prefix truncation is accepted as a validation
 shortcut. The verifier must use the candidate's declared width consistently for
-reference selection and trusted shots, and it must reject any mismatch rather
-than projecting the 42-qubit target. The checked-in target metadata currently
-registers the full 42-qubit reference; lower-width generated baselines are
-retired and must not be synthesized by skipping terms. The accepted gate set is
+the mathematical MatrixMul oracle and trusted shots, and it must reject any
+mismatch rather than projecting the 42-qubit target. The checked-in target
+metadata records the full 42-qubit starter baseline artifact; generated
+lower-width baselines are retired and must not be synthesized by skipping terms.
+The accepted gate set is
 deliberately narrow: `h`, `x`, `y`,
 `z`, `rz`, `cx`, and `cnot`; `barrier` is allowed as a non-operational
 annotation. Measurement, reset, classical control, loops, and dynamic constructs
@@ -155,11 +156,9 @@ baseline; there is no separate `submissions` folder.
 
 `dist/solution.qasm` is a generated local artifact used for verification and
 metadata hashing. The verifier uses the candidate's declared width when building
-trusted probe states. If an actual same-width reference artifact is registered,
-the verifier compares against it. If no lower-width reference exists, the
-verifier computes the expected behavior with the mathematical same-width
-MatrixMul oracle for that declared width, without projecting or truncating the
-42-qubit baseline.
+trusted probe states and when computing the expected behavior with the
+mathematical same-width MatrixMul oracle. It does not project, truncate, or
+self-compare against the 42-qubit baseline.
 
 For a score candidate:
 
@@ -203,7 +202,7 @@ cx/cnot duration = 1 + 6 * max(abs(control - target) - 1, 0)
 The extra factors beyond `qubits * sqrt(count * depth)` are needed because this
 circuit uses arbitrary `rz` angles and distance-2 rail couplings. The verifier
 reports the allowed-gate counts, weighted volume terms, weighted depth model,
-maximum two-qubit distance, and per-shot fidelity against the reference circuit.
+maximum two-qubit distance, and per-shot fidelity against the math oracle.
 
 ## Useful Optimization Primitives
 
@@ -237,8 +236,8 @@ have to preserve the baseline lowering. Useful primitives to investigate:
   unrelated rotations, and prefer layouts that keep two-qubit distance at 1.
 - **Ancilla lifetime shortening.** The baseline declares 42 qubits, including
   10 block-encoding workspace qubits. A lower declared width is rankable when
-  the submitted implementation matches the same-width MatrixMul oracle; do not
-  treat skipped higher-width terms as a valid lower-width
+  the submitted implementation matches the same-width MatrixMul oracle for its
+  declared width; do not treat skipped higher-width terms as a valid lower-width
   implementation.
 - **Finite-probe equivalence checks.** The trusted gate is the fixed 9024-shot
   product-state probe set, not symbolic equality over all states. Prefer

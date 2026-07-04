@@ -3,9 +3,7 @@ use std::fmt;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use block_encoding_matrix_lv16::{
-    LOGICAL_LEVEL, ROUND_COUNT, centered_angle, render_baseline_qasm,
-};
+use block_encoding_matrix_lv16::{LOGICAL_LEVEL, ROUND_COUNT, centered_angle};
 use nalgebra::{DMatrix, linalg::SVD};
 use num_complex::Complex64;
 use serde::Deserialize;
@@ -76,7 +74,6 @@ struct Target {
     limits: Limits,
     scoring: ScoringConfig,
     verifier: VerifierConfig,
-    reference: Reference,
     smoke_probes: Vec<Shot>,
     validation: Validation,
 }
@@ -120,21 +117,19 @@ struct VerifierConfig {
     truncation_error_atol: Option<f64>,
 }
 
-#[derive(Debug, Deserialize)]
-struct Reference {
-    sha256: String,
-}
-
 enum ValidationOracle {
     Circuit(Circuit),
-    SameWidthMatrixMul { qubits: usize },
+    MathMatrixMul {
+        qubits: usize,
+        instructions: Vec<Instruction>,
+    },
 }
 
 impl ValidationOracle {
     fn sha256(&self) -> Option<String> {
         match self {
             Self::Circuit(circuit) => Some(circuit.sha256.clone()),
-            Self::SameWidthMatrixMul { .. } => None,
+            Self::MathMatrixMul { .. } => None,
         }
     }
 }
@@ -142,7 +137,6 @@ impl ValidationOracle {
 struct ReferenceSelection {
     label: String,
     oracle: Option<ValidationOracle>,
-    expected_sha256: Option<String>,
     errors: Vec<String>,
 }
 
@@ -364,8 +358,9 @@ fn print_help() {
     println!(
         "Usage: verify <candidate.qasm> [--target PATH] [--reference PATH] [--preflight|--smoke]\n\
          \n\
-         By default, a registered same-width reference is used when present; otherwise\n\
-         lower-width candidates are validated against the mathematical same-width MatrixMul oracle.\n\
+         By default, every supported declared width is validated against the\n\
+         mathematical same-width MatrixMul oracle. Use --reference only for\n\
+         manual debugging against an explicit circuit artifact.\n\
          Trusted mode defaults to all 9024 deterministic shots. Use --shot-count N\n\
          or --shot-shard INDEX/TOTAL for bounded local checks and CI sharding.\n\
          Use --truncation-error-atol X to override the MPS truncation failure threshold."
@@ -388,103 +383,22 @@ fn next_parse<T: std::str::FromStr>(raw: &[String], i: usize, option: &str) -> R
         .map_err(|_| VerifyError(format!("invalid value for {option}")))
 }
 
-fn width_reference_entry(
-    target_value: &serde_json::Value,
-    width: usize,
-) -> Option<&serde_json::Value> {
-    target_value
-        .get("references")
-        .and_then(|references| references.get("by_width"))
-        .and_then(|by_width| by_width.get(width.to_string()))
-}
-
-fn select_official_reference(
-    target_path: &Path,
+fn select_math_oracle(
     target_value: &serde_json::Value,
     target: &Target,
     declared_width: usize,
 ) -> Result<ReferenceSelection> {
-    let Some(entry) = width_reference_entry(target_value, declared_width) else {
-        if declared_width == target.qubits {
-            let qasm = render_baseline_qasm(target_value);
-            return Ok(ReferenceSelection {
-                label: format!(
-                    "generated:src/util/generate_baseline.rs#qubits={}",
-                    target.qubits
-                ),
-                oracle: Some(ValidationOracle::Circuit(parse_qasm_text(
-                    "generated full-width reference",
-                    &qasm,
-                    &target.scoring,
-                )?)),
-                expected_sha256: Some(target.reference.sha256.clone()),
-                errors: Vec::new(),
-            });
-        }
-        return Ok(ReferenceSelection {
-            label: format!("math:same-width-matrixmul#qubits={declared_width}"),
-            oracle: Some(ValidationOracle::SameWidthMatrixMul {
-                qubits: declared_width,
-            }),
-            expected_sha256: None,
-            errors: Vec::new(),
-        });
-    };
-
-    let expected_sha256 = entry
-        .get("sha256")
-        .and_then(serde_json::Value::as_str)
-        .map(str::to_string);
-    let Some(path) = entry.get("path").and_then(serde_json::Value::as_str) else {
-        return Ok(ReferenceSelection {
-            label: format!("invalid:official-reference#qubits={declared_width}"),
-            oracle: None,
-            expected_sha256,
-            errors: vec![format!(
-                "official reference for declared width {declared_width} is missing a QASM path"
-            )],
-        });
-    };
-    if path.starts_with("generated:") {
-        if declared_width == target.qubits {
-            let qasm = render_baseline_qasm(target_value);
-            return Ok(ReferenceSelection {
-                label: path.to_string(),
-                oracle: Some(ValidationOracle::Circuit(parse_qasm_text(
-                    "generated full-width reference",
-                    &qasm,
-                    &target.scoring,
-                )?)),
-                expected_sha256,
-                errors: Vec::new(),
-            });
-        }
-        return Ok(ReferenceSelection {
-            label: path.to_string(),
-            oracle: None,
-            expected_sha256,
-            errors: vec![format!(
-                "official reference for declared width {declared_width} must be an actual same-width QASM artifact, not a generated projection"
-            )],
-        });
-    }
-
-    let reference_path = PathBuf::from(path);
-    let reference_path = if reference_path.is_absolute() {
-        reference_path
+    let instructions = if declared_width == target.qubits {
+        build_target_term_oracle_instructions(target_value, target.qubits)?
     } else {
-        target_path
-            .parent()
-            .unwrap_or_else(|| Path::new("."))
-            .join(reference_path)
+        build_same_width_matrixmul_oracle_instructions(declared_width)?
     };
     Ok(ReferenceSelection {
-        label: reference_path.display().to_string(),
-        oracle: Some(ValidationOracle::Circuit(parse_qasm(
-            &reference_path,
-            &target.scoring,
-        )?)),
-        expected_sha256,
+        label: format!("math:same-width-matrixmul#qubits={declared_width}"),
+        oracle: Some(ValidationOracle::MathMatrixMul {
+            qubits: declared_width,
+            instructions,
+        }),
         errors: Vec::new(),
     })
 }
@@ -504,11 +418,10 @@ fn verify(args: &Args) -> Result<serde_json::Value> {
                 reference_path,
                 &target.scoring,
             )?)),
-            expected_sha256: None,
             errors: Vec::new(),
         }
     } else {
-        select_official_reference(&args.target, &target_value, &target, candidate.qubits)?
+        select_math_oracle(&target_value, &target, candidate.qubits)?
     };
     let reference_label = reference_selection.label;
     let oracle = reference_selection.oracle;
@@ -523,16 +436,8 @@ fn verify(args: &Args) -> Result<serde_json::Value> {
                         candidate.qubits, reference.qubits
                     ));
                 }
-                if let Some(expected) = reference_selection.expected_sha256.as_deref() {
-                    if reference.sha256 != expected {
-                        errors.push(format!(
-                            "reference hash mismatch: expected {}, got {}",
-                            expected, reference.sha256
-                        ));
-                    }
-                }
             }
-            ValidationOracle::SameWidthMatrixMul { qubits } => {
+            ValidationOracle::MathMatrixMul { qubits, .. } => {
                 if *qubits != candidate.qubits {
                     errors.push(format!(
                         "oracle width mismatch: candidate declares {}, oracle declares {}",
@@ -658,10 +563,6 @@ fn parse_qasm(path: &Path, scoring: &ScoringConfig) -> Result<Circuit> {
         return Err(VerifyError(format!("empty QASM file: {}", path.display())));
     }
     parse_qasm_payload(&path.display().to_string(), payload, scoring)
-}
-
-fn parse_qasm_text(label: &str, text: &str, scoring: &ScoringConfig) -> Result<Circuit> {
-    parse_qasm_payload(label, text.as_bytes().to_vec(), scoring)
 }
 
 fn parse_qasm_payload(label: &str, payload: Vec<u8>, scoring: &ScoringConfig) -> Result<Circuit> {
@@ -1256,9 +1157,32 @@ fn build_trusted_shot(target: &Target, shot_index: usize, declared_qubits: usize
     }
 }
 
+fn synthetic_instruction(
+    name: &str,
+    qubits: Vec<usize>,
+    params: Vec<f64>,
+    line: usize,
+) -> Instruction {
+    Instruction {
+        name: name.to_string(),
+        qubits,
+        params,
+        line,
+    }
+}
+
 fn simulate(circuit: &Circuit, states: &[String], max_bond: usize, cutoff: f64) -> Result<Mps> {
+    simulate_instructions(&circuit.instructions, states, max_bond, cutoff)
+}
+
+fn simulate_instructions(
+    instructions: &[Instruction],
+    states: &[String],
+    max_bond: usize,
+    cutoff: f64,
+) -> Result<Mps> {
     let mut sim = Mps::new(states, max_bond, cutoff)?;
-    for instruction in &circuit.instructions {
+    for instruction in instructions {
         match instruction.qubits.len() {
             1 => {
                 let gate = single_gate_matrix(&instruction.name, &instruction.params)?;
@@ -1274,52 +1198,139 @@ fn simulate(circuit: &Circuit, states: &[String], max_bond: usize, cutoff: f64) 
     Ok(sim)
 }
 
-fn simulate_oracle(
-    oracle: &ValidationOracle,
-    states: &[String],
-    max_bond: usize,
-    cutoff: f64,
-) -> Result<Mps> {
-    match oracle {
-        ValidationOracle::Circuit(circuit) => simulate(circuit, states, max_bond, cutoff),
-        ValidationOracle::SameWidthMatrixMul { qubits } => {
-            simulate_same_width_matrixmul_oracle(*qubits, states, max_bond, cutoff)
+fn build_target_term_oracle_instructions(
+    target_value: &serde_json::Value,
+    target_qubits: usize,
+) -> Result<Vec<Instruction>> {
+    let terms = target_value
+        .get("terms")
+        .and_then(serde_json::Value::as_array)
+        .ok_or_else(|| VerifyError("target metadata is missing terms array".to_string()))?;
+    let mut instructions = Vec::new();
+    for q in 0..target_qubits {
+        instructions.push(synthetic_instruction("h", vec![q], Vec::new(), 0));
+    }
+
+    for (index, term) in terms.iter().enumerate() {
+        let line = index + 1;
+        let kind = term
+            .get("kind")
+            .and_then(serde_json::Value::as_str)
+            .ok_or_else(|| VerifyError(format!("target term {index} is missing kind")))?;
+        let qubits = target_term_qubits(term, index, target_qubits)?;
+        let angle = term
+            .get("angle")
+            .and_then(serde_json::Value::as_f64)
+            .ok_or_else(|| VerifyError(format!("target term {index} is missing angle")))?;
+
+        match kind {
+            "z_phase" => {
+                if qubits.len() != 1 {
+                    return Err(VerifyError(format!(
+                        "target z_phase term {index} must have 1 qubit"
+                    )));
+                }
+                instructions.push(synthetic_instruction("rz", qubits, vec![angle], line));
+            }
+            "zz_phase" => {
+                if qubits.len() != 2 {
+                    return Err(VerifyError(format!(
+                        "target zz_phase term {index} must have 2 qubits"
+                    )));
+                }
+                instructions.push(synthetic_instruction(
+                    "cx",
+                    vec![qubits[0], qubits[1]],
+                    Vec::new(),
+                    line,
+                ));
+                instructions.push(synthetic_instruction(
+                    "rz",
+                    vec![qubits[1]],
+                    vec![angle],
+                    line,
+                ));
+                instructions.push(synthetic_instruction(
+                    "cx",
+                    vec![qubits[0], qubits[1]],
+                    Vec::new(),
+                    line,
+                ));
+            }
+            "x_mixer" => {
+                if qubits.len() != 1 {
+                    return Err(VerifyError(format!(
+                        "target x_mixer term {index} must have 1 qubit"
+                    )));
+                }
+                instructions.push(synthetic_instruction("h", qubits.clone(), Vec::new(), line));
+                instructions.push(synthetic_instruction(
+                    "rz",
+                    qubits.clone(),
+                    vec![angle],
+                    line,
+                ));
+                instructions.push(synthetic_instruction("h", qubits, Vec::new(), line));
+            }
+            other => {
+                return Err(VerifyError(format!(
+                    "target term {index} has unsupported kind {other}"
+                )));
+            }
         }
     }
+
+    Ok(instructions)
 }
 
-fn simulate_same_width_matrixmul_oracle(
-    declared_qubits: usize,
-    states: &[String],
-    max_bond: usize,
-    cutoff: f64,
-) -> Result<Mps> {
-    if states.len() != declared_qubits {
-        return Err(VerifyError(format!(
-            "oracle state width mismatch: got {}, expected {}",
-            states.len(),
-            declared_qubits
-        )));
+fn target_term_qubits(
+    term: &serde_json::Value,
+    index: usize,
+    target_qubits: usize,
+) -> Result<Vec<usize>> {
+    let values = term
+        .get("qubits")
+        .and_then(serde_json::Value::as_array)
+        .ok_or_else(|| VerifyError(format!("target term {index} is missing qubits")))?;
+    let mut qubits = Vec::new();
+    for value in values {
+        let qubit = value
+            .as_u64()
+            .ok_or_else(|| VerifyError(format!("target term {index} has non-integer qubit")))?
+            as usize;
+        if qubit >= target_qubits {
+            return Err(VerifyError(format!(
+                "target term {index} uses qubit {qubit}, outside width {target_qubits}"
+            )));
+        }
+        qubits.push(qubit);
     }
+    Ok(qubits)
+}
+
+fn build_same_width_matrixmul_oracle_instructions(
+    declared_qubits: usize,
+) -> Result<Vec<Instruction>> {
     if declared_qubits <= LOGICAL_LEVEL {
         return Err(VerifyError(format!(
             "declared width {declared_qubits} must include {LOGICAL_LEVEL} system qubits plus workspace"
         )));
     }
 
-    let mut sim = Mps::new(states, max_bond, cutoff)?;
+    let mut instructions = Vec::new();
     let width_s = declared_qubits.to_string();
     for q in 0..declared_qubits {
-        apply_single_named(&mut sim, q, "h", &[])?;
+        instructions.push(synthetic_instruction("h", vec![q], Vec::new(), 0));
     }
 
     for round in 0..ROUND_COUNT {
+        let line = round + 1;
         let round_s = round.to_string();
 
         for q in 0..declared_qubits {
             let q_s = q.to_string();
             let angle = centered_angle(0.083, &["same_width", "z", &width_s, &round_s, &q_s]);
-            apply_single_named(&mut sim, q, "rz", &[angle])?;
+            instructions.push(synthetic_instruction("rz", vec![q], vec![angle], line));
         }
 
         for q in 0..declared_qubits - 1 {
@@ -1328,9 +1339,19 @@ fn simulate_same_width_matrixmul_oracle(
                 0.047,
                 &["same_width", "matrix_edge", &width_s, &round_s, &q_s],
             );
-            apply_two_named(&mut sim, q, q + 1, "cx")?;
-            apply_single_named(&mut sim, q + 1, "rz", &[angle])?;
-            apply_two_named(&mut sim, q, q + 1, "cx")?;
+            instructions.push(synthetic_instruction(
+                "cx",
+                vec![q, q + 1],
+                Vec::new(),
+                line,
+            ));
+            instructions.push(synthetic_instruction("rz", vec![q + 1], vec![angle], line));
+            instructions.push(synthetic_instruction(
+                "cx",
+                vec![q, q + 1],
+                Vec::new(),
+                line,
+            ));
         }
 
         for q in 0..LOGICAL_LEVEL {
@@ -1338,25 +1359,38 @@ fn simulate_same_width_matrixmul_oracle(
                 let q_s = q.to_string();
                 let angle =
                     centered_angle(0.059, &["same_width", "x_mixer", &width_s, &round_s, &q_s]);
-                apply_single_named(&mut sim, q, "h", &[])?;
-                apply_single_named(&mut sim, q, "rz", &[angle])?;
-                apply_single_named(&mut sim, q, "h", &[])?;
+                instructions.push(synthetic_instruction("h", vec![q], Vec::new(), line));
+                instructions.push(synthetic_instruction("rz", vec![q], vec![angle], line));
+                instructions.push(synthetic_instruction("h", vec![q], Vec::new(), line));
             }
         }
     }
 
-    Ok(sim)
+    Ok(instructions)
 }
 
-fn apply_single_named(sim: &mut Mps, q: usize, name: &str, params: &[f64]) -> Result<()> {
-    let gate = single_gate_matrix(name, params)?;
-    sim.apply_single(q, gate);
-    Ok(())
-}
-
-fn apply_two_named(sim: &mut Mps, q0: usize, q1: usize, name: &str) -> Result<()> {
-    let gate = two_gate_matrix(name, &[])?;
-    sim.apply_two(q0, q1, gate)
+fn simulate_oracle(
+    oracle: &ValidationOracle,
+    states: &[String],
+    max_bond: usize,
+    cutoff: f64,
+) -> Result<Mps> {
+    match oracle {
+        ValidationOracle::Circuit(circuit) => simulate(circuit, states, max_bond, cutoff),
+        ValidationOracle::MathMatrixMul {
+            qubits,
+            instructions,
+        } => {
+            if states.len() != *qubits {
+                return Err(VerifyError(format!(
+                    "oracle state width mismatch: got {}, expected {}",
+                    states.len(),
+                    qubits
+                )));
+            }
+            simulate_instructions(instructions, states, max_bond, cutoff)
+        }
+    }
 }
 
 impl Mps {

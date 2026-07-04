@@ -23,7 +23,7 @@
     "min_qubits": 17
   },
   "logical_level": 16,
-  "metadata_sha256": "051499bc88a34ac6f8d83294d87d0e5f8da532ef82e9b2f39dbf2140d1ad028e",
+  "metadata_sha256": "79a415c9875130cd5432095fb5a3047cd695574a72466df6af4030d0fc4e4a8b",
   "name": "Block-Encoding Matrix Ladder LV16",
   "qubit_layout": [
     {
@@ -274,7 +274,7 @@
     "generator": "src/util/generate_baseline.rs",
     "path": "generated:src/util/generate_baseline.rs",
     "sha256": "ccf8907478ff1917e8b8e1db5746335e9a427ae7c44782a5fa8bb23add7b5250",
-    "width_policy": "The stored sha256 is the full 42-qubit target reference. Lower-width submissions from 17 through 41 qubits are validated against the mathematical same-width MatrixMul oracle for their declared width; the verifier never projects or truncates the 42-qubit target."
+    "width_policy": "The stored sha256 is the full 42-qubit starter baseline artifact. Trusted validation for every supported declared width from 17 through 42 qubits uses the mathematical same-width MatrixMul oracle; the verifier never projects or truncates the 42-qubit target."
   },
   "references": {
     "by_width": {
@@ -282,10 +282,10 @@
         "generator": "src/util/generate_baseline.rs",
         "path": "generated:src/util/generate_baseline.rs",
         "sha256": "ccf8907478ff1917e8b8e1db5746335e9a427ae7c44782a5fa8bb23add7b5250",
-        "width_policy": "The stored sha256 is the full 42-qubit target reference. Lower-width submissions from 17 through 41 qubits are validated against the mathematical same-width MatrixMul oracle for their declared width; the verifier never projects or truncates the 42-qubit target."
+        "width_policy": "The stored sha256 is the full 42-qubit starter baseline artifact. Trusted validation for every supported declared width from 17 through 42 qubits uses the mathematical same-width MatrixMul oracle; the verifier never projects or truncates the 42-qubit target."
       }
     },
-    "policy": "The 42-qubit width uses the fixed generated baseline reference. Lower declared widths use the mathematical same-width MatrixMul oracle; do not project a wider target by skipping terms outside the declared width."
+    "policy": "Reference metadata records the fixed 42-qubit starter baseline artifact. Trusted validation uses the mathematical same-width MatrixMul oracle for every supported declared width; do not project a wider target by skipping terms outside the declared width."
   },
   "rounds": 4,
   "schema_version": "1.0.0",

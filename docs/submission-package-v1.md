@@ -15,10 +15,10 @@ cannot be submitted.
 
 MatrixMul LV16 packages may declare any width from `qubit[17] q;` through
 `qubit[42] q;`. The trusted verifier must use the candidate's declared width
-consistently for reference selection and trusted shots, and it must never
-validate a lower-width submission by truncating or projecting the fixed
-42-qubit baseline. Generated lower-width baselines are retired; the checked-in
-baseline currently registers only the full 42-qubit reference.
+consistently for the mathematical same-width MatrixMul oracle and trusted
+shots, and it must never validate by truncating, projecting, or self-comparing
+against the fixed 42-qubit baseline. Generated lower-width baselines are
+retired; the checked-in baseline remains the full 42-qubit starter artifact.
 
 Required metadata fields include:
 

@@ -16,12 +16,12 @@ pub fn render_qasm(target: &Value) -> String {
 
 All circuit structure therefore comes from the trusted repository generator in
 `src/lib.rs`. The baseline is not an optimized hand-written circuit; it is the
-canonical full-width 42-qubit reference circuit exposed through the editable
+canonical full-width 42-qubit starter artifact exposed through the editable
 `src/matmul/mod.rs` entrypoint. MatrixMul LV16 submissions may declare widths
-from 17 through 42 qubits. The verifier must use the implementation's declared
-width consistently and must not validate a lower-width circuit by truncating or
-projecting the 42-qubit target. Lower-width generated baselines are retired;
-the fixed baseline remains the 42-qubit reference.
+from 17 through 42 qubits. The verifier uses the mathematical same-width
+MatrixMul oracle for every supported declared width and must not validate a
+lower-width circuit by truncating or projecting the 42-qubit target. Lower-width
+generated baselines are retired.
 
 ## Algorithm Shape
 
@@ -39,7 +39,7 @@ round:
 
 Angles are deterministically derived from SHA-256 based target metadata and are
 printed to 12 decimal places. The submitted artifact hash matches the generated
-full-width reference circuit hash recorded in `score.json`.
+full-width baseline artifact hash recorded in `score.json`.
 
 ## Score Drivers
 
@@ -64,11 +64,9 @@ qubits between the touched endpoints.
 
 The trusted validation gate records `9024` deterministic product-state shots
 using the Matrix Product State verifier at the implementation's declared width.
-For the current baseline that means comparing against the generated full-width
-42-qubit reference. For lower-width implementations with no registered
-reference artifact, validation runs against the mathematical same-width
-MatrixMul oracle and never synthesizes a projected or truncated lower-width
-baseline.
+For every supported width from 17 through 42 qubits, validation runs against the
+mathematical same-width MatrixMul oracle and never synthesizes a projected,
+truncated, or self-comparison baseline.
 
 ## Optimization Opportunities
 
@@ -84,5 +82,5 @@ The main opportunities are:
 - Reschedule independent terms to lower weighted depth, especially around long
   runs of `rz` and routed `cx` operations.
 
-Treat this baseline as the exact full-width reference and the first score
+Treat this baseline as the exact full-width starter artifact and the first score
 target, not as evidence that the current lowering is near optimal.

@@ -9,7 +9,7 @@ flowchart TD
   algorithm --> Editable["Editable entrypoint: src/matmul/mod.rs"]
   Editable --> Delegate["Baseline render_qasm delegates to crate::render_baseline_qasm(target)"]
   Delegate --> Metadata["Target metadata fixes the 42-qubit LV16 ladder: system rails, workspace wires, 4 rounds, phase terms, and coupling edges"]
-  Metadata --> Policy["Same-width policy: q17..q42 declared widths are accepted; verifier rejects projection or truncation of the 42q baseline"]
+  Metadata --> Policy["Same-width policy: q17..q42 declared widths are accepted; verifier uses the mathematical MatrixMul oracle"]
   Delegate --> Prep["Initialize the full declared register with h on every qubit"]
   Prep --> Rounds["Replay the deterministic target terms round by round"]
   Rounds --> ZPhase["z_phase: apply rz(angle) to one target qubit"]
@@ -20,9 +20,9 @@ flowchart TD
   XMixer --> QASM
   QASM --> Validation["Validation: 9024 deterministic product-state shots run at the declared implementation width"]
 
-  optimization --> Baseline["Baseline strategy: exact generated reference circuit, no algebraic simplification"]
+  optimization --> Baseline["Baseline strategy: exact generated 42q starter artifact, no algebraic simplification"]
   Baseline --> Correctness["Correctness comes from reproducing the non-editable target generator rather than discovering a smaller equivalent circuit"]
-  Correctness --> Hash["Artifact hash matches the generated full-width 42-qubit reference"]
+  Correctness --> Hash["Trusted shots compare against the math oracle; artifact hash binds the generated 42q QASM"]
   optimization --> Score["Baseline score 283,024.067175 = 42 * sqrt(28,470 weighted volume * 1,595 weighted depth)"]
   Score --> Rotations["414 rz gates dominate volume through 64x synthesis weight = 26,496"]
   Score --> Entangling["448 cx gates; 240 are distance-2 remote couplings, adding 480 routing swap equivalents"]
