@@ -1,0 +1,116 @@
+name: Trusted MatrixMul worker
+
+on:
+  workflow_dispatch:
+    inputs:
+      submission_id:
+        description: Server submission id to validate
+        required: true
+        type: string
+      api_url:
+        description: Contest server base URL supplied by the server dispatch
+        required: true
+        type: string
+      worker_claim:
+        description: Scoped one-submission worker claim supplied by the server dispatch
+        required: true
+        type: string
+      dry_run:
+        description: Run validation without callback
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+
+jobs:
+  fetch-submission:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    env:
+      MATRIXMUL_WORKER_API_URL: ${{ inputs.api_url }}
+      MATRIXMUL_WORKER_SUBMISSION_ID: ${{ inputs.submission_id }}
+      MATRIXMUL_WORKER_CLAIM: ${{ inputs.worker_claim }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Fetch pending submission
+        run: node tools/trusted-worker.mjs fetch
+      - uses: actions/upload-artifact@v4
+        with:
+          name: trusted-worker-input
+          path: |
+            .trusted-worker/submission.json
+            .trusted-worker/submission.tar.gz
+          if-no-files-found: error
+          retention-days: 1
+
+  validate-submission:
+    needs: fetch-submission
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: trusted-worker-input
+          path: .trusted-worker
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Build verifier
+        run: cargo build --release --bins
+      - name: Validate pending submission without credentials
+        env:
+          MATRIXMUL_WORKER_API_URL: ""
+          MATRIXMUL_WORKER_SUBMISSION_ID: ""
+          MATRIXMUL_WORKER_CLAIM: ""
+          BEML_WORKER_CLAIM: ""
+        run: node tools/trusted-worker.mjs validate
+      - uses: actions/upload-artifact@v4
+        if: ${{ success() }}
+        with:
+          name: trusted-worker-validation
+          path: .trusted-worker/validation-result.json
+          if-no-files-found: error
+          retention-days: 1
+
+  publish-result:
+    needs:
+      - fetch-submission
+      - validate-submission
+    if: ${{ always() && needs.fetch-submission.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    env:
+      MATRIXMUL_WORKER_API_URL: ${{ inputs.api_url }}
+      MATRIXMUL_WORKER_SUBMISSION_ID: ${{ inputs.submission_id }}
+      MATRIXMUL_WORKER_CLAIM: ${{ inputs.worker_claim }}
+      MATRIXMUL_WORKER_DRY_RUN: ${{ inputs.dry_run }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          name: trusted-worker-input
+          path: .trusted-worker
+      - uses: actions/download-artifact@v4
+        if: ${{ needs.validate-submission.result == 'success' }}
+        with:
+          name: trusted-worker-validation
+          path: .trusted-worker
+      - name: Commit and publish trusted pass
+        if: ${{ needs.validate-submission.result == 'success' }}
+        run: node tools/trusted-worker.mjs finalize-pass
+      - name: Publish trusted failure
+        if: ${{ needs.validate-submission.result != 'success' }}
+        run: node tools/trusted-worker.mjs finalize-fail

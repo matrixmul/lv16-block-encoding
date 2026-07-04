@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "name": "matrixmul-lv16-varq-v3",
+  "description": "Optimize an OpenQASM 3.0 block-encoding matrix ladder circuit while matching the official same-width LV16 reference on the finite trusted probe set. Declared widths from 17 through 42 are allowed only when a real same-width reference implementation is registered.",
+  "scoreModel": "logical_hardware_volume_v1",
+  "scoreNote": "score = qubits * sqrt(weighted_gate_volume * weighted_depth). For v1 gates: weighted_gate_volume = h+x+y+z + 64*rz + cx/cnot + 6*sum(extra two-qubit distance). Preflight rejects circuits that exceed the target cost guard before trusted shots run.",
+  "category": "rust-openqasm",
+  "direction": "-",
+  "editablePaths": [
+    "src/matmul"
+  ],
+  "artifact": "dist/solution.qasm",
+  "architectureDiagram": "src/matmul/architecture.mmd",
+  "notePath": "src/matmul/README.md",
+  "targetPath": "challenges/target_16q.json",
+  "setupCommand": [
+    "cargo",
+    "build",
+    "--release",
+    "--bins"
+  ],
+  "benchmarkCommand": [
+    "node",
+    "matrixmul.js",
+    "run"
+  ],
+  "scorePath": "score.json",
+  "trustedShots": 9024,
+  "validationGate": "matrixmul_lv16_same_width_qasm_equivalence",
+  "requiredValidationChecks": [
+    "equivalence to official same-width reference circuit",
+    "same-width QASM ABI",
+    "all deterministic product-state probes",
+    "MPS tolerance"
+  ],
+  "limits": {
+    "maxArchiveBytes": 26214400,
+    "maxNoteBytes": 10240,
+    "maxArchitectureBytes": 1048576
+  }
+}

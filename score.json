@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "benchmark": "matrixmul-lv16-varq-v3",
+  "targetId": "matrixmul-lv16-varq-v3",
+  "targetMetadataSha256": "4580d1f37eb7b4dcb470ab527ae064b0dcf7ab632ca484fb49f93d92df775e6e",
+  "status": "ranked",
+  "score": 283024.0671745073,
+  "score_model": "logical_hardware_volume_v1",
+  "scoreBreakdown": {
+    "allowed_gate_counts": {
+      "cnot": 0,
+      "cx": 448,
+      "h": 86,
+      "rz": 414,
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "entangling_gate_equivalents": 1888,
+    "formula": "qubits * sqrt(weighted_gate_volume * weighted_depth)",
+    "model": "logical_hardware_volume_v1",
+    "qubits": 42,
+    "remote_two_qubit_gates": 240,
+    "rotation_synthesis_equivalents": 26496,
+    "routing_swap_equivalents": 480,
+    "score": 283024.0671745073,
+    "two_qubit_distance_sum": 688,
+    "volume_product": 45409650,
+    "weighted_depth": 1595,
+    "weighted_depth_model": {
+      "cx_cnot_base_duration": 1,
+      "native_one_qubit_duration": 1,
+      "routing_swap_entangling_duration": 3,
+      "routing_swap_per_extra_distance": 2,
+      "rz_duration": 16
+    },
+    "weighted_gate_volume": 28470,
+    "weighted_gate_volume_terms": {
+      "cx_cnot_entangling": 448,
+      "native_one_qubit": 86,
+      "routing_entangling": 1440,
+      "rz_synthesis": 26496
+    }
+  },
+  "costGuard": {
+    "limits": {
+      "max_depth": 50000,
+      "max_gates": 50000,
+      "max_qasm_bytes": 5000000,
+      "max_remote_two_qubit_gates": 20000,
+      "max_rotation_gates": 20000,
+      "max_routing_swap_equivalents": 100000,
+      "max_two_qubit_distance": 8,
+      "max_two_qubit_gates": 30000,
+      "max_weighted_depth": 100000,
+      "max_weighted_gate_volume": 2000000
+    },
+    "observed": {
+      "depth": 119,
+      "gates": 948,
+      "max_two_qubit_distance": 2,
+      "qasm_bytes": 19491,
+      "remote_two_qubit_gates": 240,
+      "rotation_gates": 414,
+      "routing_swap_equivalents": 480,
+      "two_qubit_gates": 448,
+      "weighted_depth": 1595,
+      "weighted_gate_volume": 28470
+    }
+  },
+  "metrics": {
+    "cnot_gates": 0,
+    "cx_gates": 448,
+    "depth": 119,
+    "entangling_gate_equivalents": 1888,
+    "gates": 948,
+    "h_gates": 86,
+    "max_distance": 2,
+    "remote_two_qubit_gates": 240,
+    "rotation_gates": 414,
+    "rotation_synthesis_equivalents": 26496,
+    "routing_swap_equivalents": 480,
+    "rz_gates": 414,
+    "single_qubit_gates": 500,
+    "swap_gates": 0,
+    "two_qubit_distance_sum": 688,
+    "two_qubit_gates": 448,
+    "weighted_depth": 1595,
+    "weighted_gate_volume": 28470,
+    "x_gates": 0,
+    "y_gates": 0,
+    "z_gates": 0
+  },
+  "validation": {
+    "shots": 9024,
+    "trustedShots": 9024,
+    "mode": "trusted",
+    "gate": "matrixmul_lv16_same_width_qasm_equivalence",
+    "checks": [
+      "equivalence to official same-width reference circuit",
+      "same-width QASM ABI",
+      "all deterministic product-state probes",
+      "MPS tolerance"
+    ]
+  },
+  "artifact": "dist/solution.qasm",
+  "artifactSha256": "ccf8907478ff1917e8b8e1db5746335e9a427ae7c44782a5fa8bb23add7b5250",
+  "referenceSha256": "ccf8907478ff1917e8b8e1db5746335e9a427ae7c44782a5fa8bb23add7b5250",
+  "generatedAt": "2026-07-04T14:32:53.047Z"
+}

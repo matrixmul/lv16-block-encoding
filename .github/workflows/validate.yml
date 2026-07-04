@@ -1,0 +1,46 @@
+name: Validate MatrixMul submissions
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shot-shard:
+          - "0/16"
+          - "1/16"
+          - "2/16"
+          - "3/16"
+          - "4/16"
+          - "5/16"
+          - "6/16"
+          - "7/16"
+          - "8/16"
+          - "9/16"
+          - "10/16"
+          - "11/16"
+          - "12/16"
+          - "13/16"
+          - "14/16"
+          - "15/16"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Check generated target metadata
+        run: cargo run --release --bin generate-target -- --check
+      - name: Build Rust verifier
+        run: cargo build --release --bin verify
+      - name: Generate MatrixMul QASM from source
+        run: cargo run --release --bin generate-solution -- --output dist/solution.qasm
+      - name: Check CLI preflight
+        run: node matrixmul.js preflight
+      - name: Verify trusted 9024-shot baseline shard
+        run: >
+          cargo run --release --bin verify --
+          dist/solution.qasm
+          --shot-shard "${{ matrix.shot-shard }}"
+          --json

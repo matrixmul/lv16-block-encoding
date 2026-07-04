@@ -1,0 +1,16 @@
+{
+  "name": "block-encoding-matrix-lv16",
+  "version": "0.1.0",
+  "private": true,
+  "description": "MatrixMul LV16 contest CLI and Rust verifier wrapper.",
+  "type": "commonjs",
+  "bin": {
+    "matrixmul": "matrixmul.js"
+  },
+  "scripts": {
+    "preflight": "node matrixmul.js preflight",
+    "run": "node matrixmul.js run",
+    "package": "node matrixmul.js package",
+    "validate": "node matrixmul.js validate"
+  }
+}

@@ -1,0 +1,28 @@
+[package]
+name = "block-encoding-matrix-lv16"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+
+[[bin]]
+name = "verify"
+path = "src/util/verify.rs"
+
+[[bin]]
+name = "generate-target"
+path = "src/util/generate_target.rs"
+
+[[bin]]
+name = "generate-baseline"
+path = "src/util/generate_baseline.rs"
+
+[[bin]]
+name = "generate-solution"
+path = "src/util/generate_solution.rs"
+
+[dependencies]
+nalgebra = { version = "0.34.1", default-features = false, features = ["std"] }
+num-complex = "0.4.6"
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.149"
+sha2 = "0.10.9"

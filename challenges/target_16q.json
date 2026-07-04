@@ -1,0 +1,4506 @@
+{
+  "description": "Deterministic weighted ladder-Laplacian block-encoding target. The 32 ladder qubits encode a level-16 two-rail sparse matrix; the final 10 qubits are block-encoding workspace.",
+  "laplacian": {
+    "boundary": "open",
+    "edge_count": 56,
+    "edge_digest": "6fa123fda24b5349d34a4514838d315f33bb2f22cb67aa5d1e83543d7855423a",
+    "levels": 16,
+    "matrix_dimension": 65536,
+    "rails": 2
+  },
+  "limits": {
+    "max_depth": 50000,
+    "max_gates": 50000,
+    "max_qasm_bytes": 5000000,
+    "max_qubits": 42,
+    "max_remote_two_qubit_gates": 20000,
+    "max_rotation_gates": 20000,
+    "max_routing_swap_equivalents": 100000,
+    "max_two_qubit_distance": 8,
+    "max_two_qubit_gates": 30000,
+    "max_weighted_depth": 100000,
+    "max_weighted_gate_volume": 2000000,
+    "min_qubits": 17
+  },
+  "logical_level": 16,
+  "metadata_sha256": "4580d1f37eb7b4dcb470ab527ae064b0dcf7ab632ca484fb49f93d92df775e6e",
+  "name": "Block-Encoding Matrix Ladder LV16",
+  "qubit_layout": [
+    {
+      "index": 0,
+      "level": 0,
+      "rail": "upper",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 1,
+      "level": 0,
+      "rail": "lower",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 2,
+      "level": 1,
+      "rail": "upper",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 3,
+      "level": 1,
+      "rail": "lower",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 4,
+      "level": 2,
+      "rail": "upper",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 5,
+      "level": 2,
+      "rail": "lower",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 6,
+      "level": 3,
+      "rail": "upper",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 7,
+      "level": 3,
+      "rail": "lower",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 8,
+      "level": 4,
+      "rail": "upper",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 9,
+      "level": 4,
+      "rail": "lower",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 10,
+      "level": 5,
+      "rail": "upper",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 11,
+      "level": 5,
+      "rail": "lower",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 12,
+      "level": 6,
+      "rail": "upper",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 13,
+      "level": 6,
+      "rail": "lower",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 14,
+      "level": 7,
+      "rail": "upper",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 15,
+      "level": 7,
+      "rail": "lower",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 16,
+      "level": 8,
+      "rail": "upper",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 17,
+      "level": 8,
+      "rail": "lower",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 18,
+      "level": 9,
+      "rail": "upper",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 19,
+      "level": 9,
+      "rail": "lower",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 20,
+      "level": 10,
+      "rail": "upper",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 21,
+      "level": 10,
+      "rail": "lower",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 22,
+      "level": 11,
+      "rail": "upper",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 23,
+      "level": 11,
+      "rail": "lower",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 24,
+      "level": 12,
+      "rail": "upper",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 25,
+      "level": 12,
+      "rail": "lower",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 26,
+      "level": 13,
+      "rail": "upper",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 27,
+      "level": 13,
+      "rail": "lower",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 28,
+      "level": 14,
+      "rail": "upper",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 29,
+      "level": 14,
+      "rail": "lower",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 30,
+      "level": 15,
+      "rail": "upper",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 31,
+      "level": 15,
+      "rail": "lower",
+      "role": "matrix_ladder"
+    },
+    {
+      "index": 32,
+      "level": 0,
+      "role": "block_encoding_ancilla"
+    },
+    {
+      "index": 33,
+      "level": 1,
+      "role": "block_encoding_ancilla"
+    },
+    {
+      "index": 34,
+      "level": 2,
+      "role": "block_encoding_ancilla"
+    },
+    {
+      "index": 35,
+      "level": 3,
+      "role": "block_encoding_ancilla"
+    },
+    {
+      "index": 36,
+      "level": 4,
+      "role": "block_encoding_ancilla"
+    },
+    {
+      "index": 37,
+      "level": 5,
+      "role": "block_encoding_ancilla"
+    },
+    {
+      "index": 38,
+      "level": 6,
+      "role": "block_encoding_ancilla"
+    },
+    {
+      "index": 39,
+      "level": 7,
+      "role": "block_encoding_ancilla"
+    },
+    {
+      "index": 40,
+      "level": 8,
+      "role": "block_encoding_ancilla"
+    },
+    {
+      "index": 41,
+      "level": 9,
+      "role": "block_encoding_ancilla"
+    }
+  ],
+  "qubits": 42,
+  "reference": {
+    "generator": "src/util/generate_baseline.rs",
+    "path": "generated:src/util/generate_baseline.rs",
+    "sha256": "ccf8907478ff1917e8b8e1db5746335e9a427ae7c44782a5fa8bb23add7b5250",
+    "width_policy": "The verifier must validate candidates against an official reference for the same declared width. The stored sha256 is the full 42-qubit target reference; lower-width references must be separately registered and are never synthesized by truncating the 42-qubit target."
+  },
+  "references": {
+    "by_width": {
+      "42": {
+        "generator": "src/util/generate_baseline.rs",
+        "path": "generated:src/util/generate_baseline.rs",
+        "sha256": "ccf8907478ff1917e8b8e1db5746335e9a427ae7c44782a5fa8bb23add7b5250",
+        "width_policy": "The verifier must validate candidates against an official reference for the same declared width. The stored sha256 is the full 42-qubit target reference; lower-width references must be separately registered and are never synthesized by truncating the 42-qubit target."
+      }
+    },
+    "policy": "A declared width is valid only when an official same-width reference exists. Do not project a wider target by skipping terms outside the declared width."
+  },
+  "rounds": 4,
+  "schema_version": "1.0.0",
+  "scoring": {
+    "description": "Lower is better. Reference-style hardware volume: declared qubits times sqrt(weighted gate volume times weighted depth). For v1 gates, weighted gate volume is h+x+y+z plus 64*rz plus cx/cnot plus 6 per extra two-qubit distance.",
+    "entangling_depth_weight": 1,
+    "entangling_gate_weight": 1,
+    "model": "logical_hardware_volume_v1",
+    "rotation_depth_weight": 16,
+    "rotation_synthesis_weight": 64,
+    "routing_swap_per_extra_distance": 2,
+    "single_qubit_depth_weight": 1,
+    "single_qubit_weight": 1,
+    "swap_entangling_equivalent": 3
+  },
+  "smoke_probes": [
+    {
+      "name": "zero",
+      "states": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    {
+      "name": "uniform_plus",
+      "states": [
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+",
+        "+"
+      ]
+    },
+    {
+      "name": "deterministic_computational",
+      "states": [
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "1",
+        "0",
+        "0",
+        "1",
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "1",
+        "0",
+        "0"
+      ]
+    },
+    {
+      "name": "phase_product",
+      "states": [
+        "0",
+        "0",
+        "1",
+        "+",
+        "+",
+        "1",
+        "0",
+        "+",
+        "0",
+        "-",
+        "1",
+        "+",
+        "0",
+        "+",
+        "-",
+        "1",
+        "i",
+        "0",
+        "i",
+        "1",
+        "-i",
+        "0",
+        "-i",
+        "-i",
+        "0",
+        "1",
+        "0",
+        "i",
+        "1",
+        "-i",
+        "1",
+        "1",
+        "0",
+        "0",
+        "+",
+        "-",
+        "+",
+        "0",
+        "0",
+        "-",
+        "1",
+        "-"
+      ]
+    }
+  ],
+  "target_id": "matrixmul-lv16-varq-v3",
+  "term_domain_id": "matrixmul-lv16-term-domain-v1",
+  "terms": [
+    {
+      "angle": -0.054303580482,
+      "kind": "z_phase",
+      "qubits": [
+        0
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.016689591367,
+      "kind": "z_phase",
+      "qubits": [
+        1
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.047733028559,
+      "kind": "z_phase",
+      "qubits": [
+        2
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.026570295722,
+      "kind": "z_phase",
+      "qubits": [
+        3
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.025455631645,
+      "kind": "z_phase",
+      "qubits": [
+        4
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.034524924978,
+      "kind": "z_phase",
+      "qubits": [
+        5
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.077797202026,
+      "kind": "z_phase",
+      "qubits": [
+        6
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.023641349019,
+      "kind": "z_phase",
+      "qubits": [
+        7
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.04999175572,
+      "kind": "z_phase",
+      "qubits": [
+        8
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.076945637953,
+      "kind": "z_phase",
+      "qubits": [
+        9
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.01601345148,
+      "kind": "z_phase",
+      "qubits": [
+        10
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.025505837709,
+      "kind": "z_phase",
+      "qubits": [
+        11
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.029622461568,
+      "kind": "z_phase",
+      "qubits": [
+        12
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.034006407028,
+      "kind": "z_phase",
+      "qubits": [
+        13
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.018291542341,
+      "kind": "z_phase",
+      "qubits": [
+        14
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.031519234124,
+      "kind": "z_phase",
+      "qubits": [
+        15
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.064853177115,
+      "kind": "z_phase",
+      "qubits": [
+        16
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.021288005523,
+      "kind": "z_phase",
+      "qubits": [
+        17
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.044467966378,
+      "kind": "z_phase",
+      "qubits": [
+        18
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.080026621347,
+      "kind": "z_phase",
+      "qubits": [
+        19
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.043067061265,
+      "kind": "z_phase",
+      "qubits": [
+        20
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.015684383768,
+      "kind": "z_phase",
+      "qubits": [
+        21
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.019204803704,
+      "kind": "z_phase",
+      "qubits": [
+        22
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.075993148138,
+      "kind": "z_phase",
+      "qubits": [
+        23
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.065034090988,
+      "kind": "z_phase",
+      "qubits": [
+        24
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.071302971641,
+      "kind": "z_phase",
+      "qubits": [
+        25
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.012624978209,
+      "kind": "z_phase",
+      "qubits": [
+        26
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.070239135905,
+      "kind": "z_phase",
+      "qubits": [
+        27
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.064666559449,
+      "kind": "z_phase",
+      "qubits": [
+        28
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.067384742909,
+      "kind": "z_phase",
+      "qubits": [
+        29
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.011950575554,
+      "kind": "z_phase",
+      "qubits": [
+        30
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.06284997075,
+      "kind": "z_phase",
+      "qubits": [
+        31
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.078979276942,
+      "kind": "z_phase",
+      "qubits": [
+        32
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.080049889974,
+      "kind": "z_phase",
+      "qubits": [
+        33
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.021421016699,
+      "kind": "z_phase",
+      "qubits": [
+        34
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.044330689809,
+      "kind": "z_phase",
+      "qubits": [
+        35
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.072904331171,
+      "kind": "z_phase",
+      "qubits": [
+        36
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.03763025525,
+      "kind": "z_phase",
+      "qubits": [
+        37
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.006851804963,
+      "kind": "z_phase",
+      "qubits": [
+        38
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.070809192444,
+      "kind": "z_phase",
+      "qubits": [
+        39
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.026596975448,
+      "kind": "z_phase",
+      "qubits": [
+        40
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.047399576619,
+      "kind": "z_phase",
+      "qubits": [
+        41
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.015579876972,
+      "edge_index": 0,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        0,
+        1
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.035381453713,
+      "edge_index": 1,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        2,
+        3
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.003660558625,
+      "edge_index": 2,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        4,
+        5
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.046095868419,
+      "edge_index": 3,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        6,
+        7
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.045607613316,
+      "edge_index": 4,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        8,
+        9
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.041239843177,
+      "edge_index": 5,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        10,
+        11
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.046723050912,
+      "edge_index": 6,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        12,
+        13
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.014249110358,
+      "edge_index": 7,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        14,
+        15
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.016530025235,
+      "edge_index": 8,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        16,
+        17
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.046860974402,
+      "edge_index": 9,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        18,
+        19
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.028120996888,
+      "edge_index": 10,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        20,
+        21
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.046803611055,
+      "edge_index": 11,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        22,
+        23
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.025615396501,
+      "edge_index": 12,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        24,
+        25
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.00601361223,
+      "edge_index": 13,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        26,
+        27
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.002584704719,
+      "edge_index": 14,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        28,
+        29
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.036225053438,
+      "edge_index": 15,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        30,
+        31
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.0129695852,
+      "edge_index": 16,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        0,
+        2
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.004198114979,
+      "edge_index": 17,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        1,
+        3
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.016552028902,
+      "edge_index": 18,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        2,
+        4
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.037265372906,
+      "edge_index": 19,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        3,
+        5
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.020328446044,
+      "edge_index": 20,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        4,
+        6
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.014459650766,
+      "edge_index": 21,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        5,
+        7
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.041769139847,
+      "edge_index": 22,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        6,
+        8
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.041489417186,
+      "edge_index": 23,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        7,
+        9
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.017145248871,
+      "edge_index": 24,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        8,
+        10
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.002547162739,
+      "edge_index": 25,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        9,
+        11
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.026736984014,
+      "edge_index": 26,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        10,
+        12
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.005507709128,
+      "edge_index": 27,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        11,
+        13
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.030148365116,
+      "edge_index": 28,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        12,
+        14
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.018142451471,
+      "edge_index": 29,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        13,
+        15
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.002319078651,
+      "edge_index": 30,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        14,
+        16
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.02771171851,
+      "edge_index": 31,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        15,
+        17
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.017836972346,
+      "edge_index": 32,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        16,
+        18
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.023108475356,
+      "edge_index": 33,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        17,
+        19
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.020758560042,
+      "edge_index": 34,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        18,
+        20
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.013573177969,
+      "edge_index": 35,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        19,
+        21
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.017425845665,
+      "edge_index": 36,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        20,
+        22
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.014723789615,
+      "edge_index": 37,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        21,
+        23
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.001899891577,
+      "edge_index": 38,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        22,
+        24
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.040737994294,
+      "edge_index": 39,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        23,
+        25
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.00513913897,
+      "edge_index": 40,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        24,
+        26
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.040631037982,
+      "edge_index": 41,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        25,
+        27
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.032455136687,
+      "edge_index": 42,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        26,
+        28
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.033328530612,
+      "edge_index": 43,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        27,
+        29
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.041176210455,
+      "edge_index": 44,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        28,
+        30
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.010420054274,
+      "edge_index": 45,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        29,
+        31
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.010557207282,
+      "edge_index": 46,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        31,
+        32
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.019669899056,
+      "edge_index": 47,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        32,
+        33
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.027160509756,
+      "edge_index": 48,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        33,
+        34
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.003492440381,
+      "edge_index": 49,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        34,
+        35
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.014137575958,
+      "edge_index": 50,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        35,
+        36
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.008872875223,
+      "edge_index": 51,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        36,
+        37
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.010309491322,
+      "edge_index": 52,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        37,
+        38
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.025934987061,
+      "edge_index": 53,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        38,
+        39
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.005210618949,
+      "edge_index": 54,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        39,
+        40
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.010043250348,
+      "edge_index": 55,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        40,
+        41
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.040959576702,
+      "kind": "x_mixer",
+      "qubits": [
+        0
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.044182943382,
+      "kind": "x_mixer",
+      "qubits": [
+        6
+      ],
+      "round": 0
+    },
+    {
+      "angle": 0.014324771078,
+      "kind": "x_mixer",
+      "qubits": [
+        12
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.045364467889,
+      "kind": "x_mixer",
+      "qubits": [
+        18
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.033233563887,
+      "kind": "x_mixer",
+      "qubits": [
+        24
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.035824570335,
+      "kind": "x_mixer",
+      "qubits": [
+        30
+      ],
+      "round": 0
+    },
+    {
+      "angle": -0.065850771482,
+      "kind": "z_phase",
+      "qubits": [
+        0
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.079512593142,
+      "kind": "z_phase",
+      "qubits": [
+        1
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.013261462883,
+      "kind": "z_phase",
+      "qubits": [
+        2
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.027329331259,
+      "kind": "z_phase",
+      "qubits": [
+        3
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.038660096561,
+      "kind": "z_phase",
+      "qubits": [
+        4
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.031349957335,
+      "kind": "z_phase",
+      "qubits": [
+        5
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.044862336872,
+      "kind": "z_phase",
+      "qubits": [
+        6
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.056446857234,
+      "kind": "z_phase",
+      "qubits": [
+        7
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.06658208736,
+      "kind": "z_phase",
+      "qubits": [
+        8
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.013136536029,
+      "kind": "z_phase",
+      "qubits": [
+        9
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.006823838909,
+      "kind": "z_phase",
+      "qubits": [
+        10
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.060231000122,
+      "kind": "z_phase",
+      "qubits": [
+        11
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.071412503476,
+      "kind": "z_phase",
+      "qubits": [
+        12
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.073548979935,
+      "kind": "z_phase",
+      "qubits": [
+        13
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.080372570043,
+      "kind": "z_phase",
+      "qubits": [
+        14
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.006972623409,
+      "kind": "z_phase",
+      "qubits": [
+        15
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.074320759108,
+      "kind": "z_phase",
+      "qubits": [
+        16
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.022731699906,
+      "kind": "z_phase",
+      "qubits": [
+        17
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.051404734576,
+      "kind": "z_phase",
+      "qubits": [
+        18
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.001718587832,
+      "kind": "z_phase",
+      "qubits": [
+        19
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.022697901002,
+      "kind": "z_phase",
+      "qubits": [
+        20
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.079585805391,
+      "kind": "z_phase",
+      "qubits": [
+        21
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.062570708545,
+      "kind": "z_phase",
+      "qubits": [
+        22
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.019147003766,
+      "kind": "z_phase",
+      "qubits": [
+        23
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.073403834282,
+      "kind": "z_phase",
+      "qubits": [
+        24
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.001581398333,
+      "kind": "z_phase",
+      "qubits": [
+        25
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.03826974307,
+      "kind": "z_phase",
+      "qubits": [
+        26
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.006398879099,
+      "kind": "z_phase",
+      "qubits": [
+        27
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.007273107604,
+      "kind": "z_phase",
+      "qubits": [
+        28
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.048146062515,
+      "kind": "z_phase",
+      "qubits": [
+        29
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.04328520431,
+      "kind": "z_phase",
+      "qubits": [
+        30
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.033592001847,
+      "kind": "z_phase",
+      "qubits": [
+        31
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.009529986004,
+      "kind": "z_phase",
+      "qubits": [
+        32
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.041975078215,
+      "kind": "z_phase",
+      "qubits": [
+        33
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.078932603016,
+      "kind": "z_phase",
+      "qubits": [
+        34
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.067327649574,
+      "kind": "z_phase",
+      "qubits": [
+        35
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.006027949965,
+      "kind": "z_phase",
+      "qubits": [
+        36
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.031606807561,
+      "kind": "z_phase",
+      "qubits": [
+        37
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.07373627767,
+      "kind": "z_phase",
+      "qubits": [
+        38
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.079945198006,
+      "kind": "z_phase",
+      "qubits": [
+        39
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.059981793341,
+      "kind": "z_phase",
+      "qubits": [
+        40
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.058745216445,
+      "kind": "z_phase",
+      "qubits": [
+        41
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.041860986465,
+      "edge_index": 0,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        0,
+        1
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.03097566403,
+      "edge_index": 1,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        2,
+        3
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.032694663544,
+      "edge_index": 2,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        4,
+        5
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.045839346517,
+      "edge_index": 3,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        6,
+        7
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.028473524849,
+      "edge_index": 4,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        8,
+        9
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.041249468167,
+      "edge_index": 5,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        10,
+        11
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.002830548918,
+      "edge_index": 6,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        12,
+        13
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.034077825301,
+      "edge_index": 7,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        14,
+        15
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.026074881551,
+      "edge_index": 8,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        16,
+        17
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.045556833114,
+      "edge_index": 9,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        18,
+        19
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.022867760493,
+      "edge_index": 10,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        20,
+        21
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.002402506006,
+      "edge_index": 11,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        22,
+        23
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.027646366852,
+      "edge_index": 12,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        24,
+        25
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.031931022841,
+      "edge_index": 13,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        26,
+        27
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.007663174264,
+      "edge_index": 14,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        28,
+        29
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.019464750112,
+      "edge_index": 15,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        30,
+        31
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.021696231365,
+      "edge_index": 16,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        0,
+        2
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.012107157614,
+      "edge_index": 17,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        1,
+        3
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.038793572912,
+      "edge_index": 18,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        2,
+        4
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.035532426843,
+      "edge_index": 19,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        3,
+        5
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.020292201635,
+      "edge_index": 20,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        4,
+        6
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.032214901913,
+      "edge_index": 21,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        5,
+        7
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.01096316595,
+      "edge_index": 22,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        6,
+        8
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.010513146658,
+      "edge_index": 23,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        7,
+        9
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.02859724058,
+      "edge_index": 24,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        8,
+        10
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.004740561803,
+      "edge_index": 25,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        9,
+        11
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.021475055602,
+      "edge_index": 26,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        10,
+        12
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.041807048532,
+      "edge_index": 27,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        11,
+        13
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.006817516235,
+      "edge_index": 28,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        12,
+        14
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.040674645733,
+      "edge_index": 29,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        13,
+        15
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.001293641906,
+      "edge_index": 30,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        14,
+        16
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.015281390285,
+      "edge_index": 31,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        15,
+        17
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.020289249226,
+      "edge_index": 32,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        16,
+        18
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.018380216969,
+      "edge_index": 33,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        17,
+        19
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.031021798397,
+      "edge_index": 34,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        18,
+        20
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.030732735482,
+      "edge_index": 35,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        19,
+        21
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.002912542818,
+      "edge_index": 36,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        20,
+        22
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.029316976957,
+      "edge_index": 37,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        21,
+        23
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.029654647857,
+      "edge_index": 38,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        22,
+        24
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.01461835719,
+      "edge_index": 39,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        23,
+        25
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.029148043411,
+      "edge_index": 40,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        24,
+        26
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.011376704254,
+      "edge_index": 41,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        25,
+        27
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.011555354011,
+      "edge_index": 42,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        26,
+        28
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.017898502972,
+      "edge_index": 43,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        27,
+        29
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.003203922007,
+      "edge_index": 44,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        28,
+        30
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.022771238558,
+      "edge_index": 45,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        29,
+        31
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.006462980413,
+      "edge_index": 46,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        31,
+        32
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.022270243033,
+      "edge_index": 47,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        32,
+        33
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.023014567205,
+      "edge_index": 48,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        33,
+        34
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.004078206416,
+      "edge_index": 49,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        34,
+        35
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.001909622755,
+      "edge_index": 50,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        35,
+        36
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.013097274012,
+      "edge_index": 51,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        36,
+        37
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.017441494796,
+      "edge_index": 52,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        37,
+        38
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.017535454985,
+      "edge_index": 53,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        38,
+        39
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.020653555697,
+      "edge_index": 54,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        39,
+        40
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.017425492387,
+      "edge_index": 55,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        40,
+        41
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.02759571543,
+      "kind": "x_mixer",
+      "qubits": [
+        5
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.019927589752,
+      "kind": "x_mixer",
+      "qubits": [
+        11
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.019560367776,
+      "kind": "x_mixer",
+      "qubits": [
+        17
+      ],
+      "round": 1
+    },
+    {
+      "angle": -0.039483228547,
+      "kind": "x_mixer",
+      "qubits": [
+        23
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.048250890954,
+      "kind": "x_mixer",
+      "qubits": [
+        29
+      ],
+      "round": 1
+    },
+    {
+      "angle": 0.037688767456,
+      "kind": "z_phase",
+      "qubits": [
+        0
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.066848641179,
+      "kind": "z_phase",
+      "qubits": [
+        1
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.065024772871,
+      "kind": "z_phase",
+      "qubits": [
+        2
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.033124670508,
+      "kind": "z_phase",
+      "qubits": [
+        3
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.030055533211,
+      "kind": "z_phase",
+      "qubits": [
+        4
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.050561586793,
+      "kind": "z_phase",
+      "qubits": [
+        5
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.014172881618,
+      "kind": "z_phase",
+      "qubits": [
+        6
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.05024870772,
+      "kind": "z_phase",
+      "qubits": [
+        7
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.065702678797,
+      "kind": "z_phase",
+      "qubits": [
+        8
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.051885564064,
+      "kind": "z_phase",
+      "qubits": [
+        9
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.051410494404,
+      "kind": "z_phase",
+      "qubits": [
+        10
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.057157020145,
+      "kind": "z_phase",
+      "qubits": [
+        11
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.043754574228,
+      "kind": "z_phase",
+      "qubits": [
+        12
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.048528878289,
+      "kind": "z_phase",
+      "qubits": [
+        13
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.074871479068,
+      "kind": "z_phase",
+      "qubits": [
+        14
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.082535810094,
+      "kind": "z_phase",
+      "qubits": [
+        15
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.057982844489,
+      "kind": "z_phase",
+      "qubits": [
+        16
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.026779105451,
+      "kind": "z_phase",
+      "qubits": [
+        17
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.058989357169,
+      "kind": "z_phase",
+      "qubits": [
+        18
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.079850463256,
+      "kind": "z_phase",
+      "qubits": [
+        19
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.023765063569,
+      "kind": "z_phase",
+      "qubits": [
+        20
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.04248263831,
+      "kind": "z_phase",
+      "qubits": [
+        21
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.000872994597,
+      "kind": "z_phase",
+      "qubits": [
+        22
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.036191486384,
+      "kind": "z_phase",
+      "qubits": [
+        23
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.046577444435,
+      "kind": "z_phase",
+      "qubits": [
+        24
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.004727078095,
+      "kind": "z_phase",
+      "qubits": [
+        25
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.082233570197,
+      "kind": "z_phase",
+      "qubits": [
+        26
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.000185598696,
+      "kind": "z_phase",
+      "qubits": [
+        27
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.0308749955,
+      "kind": "z_phase",
+      "qubits": [
+        28
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.006136865163,
+      "kind": "z_phase",
+      "qubits": [
+        29
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.028881861655,
+      "kind": "z_phase",
+      "qubits": [
+        30
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.018935296989,
+      "kind": "z_phase",
+      "qubits": [
+        31
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.050754930641,
+      "kind": "z_phase",
+      "qubits": [
+        32
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.004476900115,
+      "kind": "z_phase",
+      "qubits": [
+        33
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.041647133452,
+      "kind": "z_phase",
+      "qubits": [
+        34
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.059166873505,
+      "kind": "z_phase",
+      "qubits": [
+        35
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.038579342264,
+      "kind": "z_phase",
+      "qubits": [
+        36
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.002323901112,
+      "kind": "z_phase",
+      "qubits": [
+        37
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.011987488919,
+      "kind": "z_phase",
+      "qubits": [
+        38
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.053841958856,
+      "kind": "z_phase",
+      "qubits": [
+        39
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.04238088948,
+      "kind": "z_phase",
+      "qubits": [
+        40
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.016680014424,
+      "kind": "z_phase",
+      "qubits": [
+        41
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.019200150221,
+      "edge_index": 0,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        0,
+        1
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.032396598212,
+      "edge_index": 1,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        2,
+        3
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.015399460581,
+      "edge_index": 2,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        4,
+        5
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.013904263129,
+      "edge_index": 3,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        6,
+        7
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.033160210677,
+      "edge_index": 4,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        8,
+        9
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.037610168564,
+      "edge_index": 5,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        10,
+        11
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.030493720187,
+      "edge_index": 6,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        12,
+        13
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.034392295334,
+      "edge_index": 7,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        14,
+        15
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.022393287374,
+      "edge_index": 8,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        16,
+        17
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.009921441539,
+      "edge_index": 9,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        18,
+        19
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.009538685588,
+      "edge_index": 10,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        20,
+        21
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.03934473549,
+      "edge_index": 11,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        22,
+        23
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.017838759742,
+      "edge_index": 12,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        24,
+        25
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.024951428694,
+      "edge_index": 13,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        26,
+        27
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.038052911875,
+      "edge_index": 14,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        28,
+        29
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.036327236051,
+      "edge_index": 15,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        30,
+        31
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.046743161533,
+      "edge_index": 16,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        0,
+        2
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.031364481785,
+      "edge_index": 17,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        1,
+        3
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.041284546172,
+      "edge_index": 18,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        2,
+        4
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.029418375496,
+      "edge_index": 19,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        3,
+        5
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.006474783007,
+      "edge_index": 20,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        4,
+        6
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.028204298834,
+      "edge_index": 21,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        5,
+        7
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.030985084854,
+      "edge_index": 22,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        6,
+        8
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.031191809483,
+      "edge_index": 23,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        7,
+        9
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.02558306449,
+      "edge_index": 24,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        8,
+        10
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.003434322711,
+      "edge_index": 25,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        9,
+        11
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.035002243854,
+      "edge_index": 26,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        10,
+        12
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.026406004726,
+      "edge_index": 27,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        11,
+        13
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.016446083868,
+      "edge_index": 28,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        12,
+        14
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.015584742958,
+      "edge_index": 29,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        13,
+        15
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.00972687076,
+      "edge_index": 30,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        14,
+        16
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.025999092042,
+      "edge_index": 31,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        15,
+        17
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.032531059707,
+      "edge_index": 32,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        16,
+        18
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.004789604811,
+      "edge_index": 33,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        17,
+        19
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.025534247169,
+      "edge_index": 34,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        18,
+        20
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.037624580803,
+      "edge_index": 35,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        19,
+        21
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.041175285555,
+      "edge_index": 36,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        20,
+        22
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.034610675399,
+      "edge_index": 37,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        21,
+        23
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.02163794645,
+      "edge_index": 38,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        22,
+        24
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.019165670782,
+      "edge_index": 39,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        23,
+        25
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.027825721096,
+      "edge_index": 40,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        24,
+        26
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.017889919548,
+      "edge_index": 41,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        25,
+        27
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.022977947676,
+      "edge_index": 42,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        26,
+        28
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.03897764406,
+      "edge_index": 43,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        27,
+        29
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.034797122772,
+      "edge_index": 44,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        28,
+        30
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.004660375852,
+      "edge_index": 45,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        29,
+        31
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.02663657493,
+      "edge_index": 46,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        31,
+        32
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.017118915349,
+      "edge_index": 47,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        32,
+        33
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.001659624802,
+      "edge_index": 48,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        33,
+        34
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.0004434678,
+      "edge_index": 49,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        34,
+        35
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.030472033004,
+      "edge_index": 50,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        35,
+        36
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.011613130011,
+      "edge_index": 51,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        36,
+        37
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.002857882866,
+      "edge_index": 52,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        37,
+        38
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.023208957028,
+      "edge_index": 53,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        38,
+        39
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.021284032991,
+      "edge_index": 54,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        39,
+        40
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.003814778143,
+      "edge_index": 55,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        40,
+        41
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.010553575495,
+      "kind": "x_mixer",
+      "qubits": [
+        2
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.036047500524,
+      "kind": "x_mixer",
+      "qubits": [
+        8
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.022069827537,
+      "kind": "x_mixer",
+      "qubits": [
+        14
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.052338643385,
+      "kind": "x_mixer",
+      "qubits": [
+        20
+      ],
+      "round": 2
+    },
+    {
+      "angle": -0.033667342192,
+      "kind": "x_mixer",
+      "qubits": [
+        26
+      ],
+      "round": 2
+    },
+    {
+      "angle": 0.015604331692,
+      "kind": "z_phase",
+      "qubits": [
+        0
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.059859475099,
+      "kind": "z_phase",
+      "qubits": [
+        1
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.028659378405,
+      "kind": "z_phase",
+      "qubits": [
+        2
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.071454661075,
+      "kind": "z_phase",
+      "qubits": [
+        3
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.017465001484,
+      "kind": "z_phase",
+      "qubits": [
+        4
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.052810326861,
+      "kind": "z_phase",
+      "qubits": [
+        5
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.01549532768,
+      "kind": "z_phase",
+      "qubits": [
+        6
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.01404012157,
+      "kind": "z_phase",
+      "qubits": [
+        7
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.004370995295,
+      "kind": "z_phase",
+      "qubits": [
+        8
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.062480260899,
+      "kind": "z_phase",
+      "qubits": [
+        9
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.06436090204,
+      "kind": "z_phase",
+      "qubits": [
+        10
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.074832645618,
+      "kind": "z_phase",
+      "qubits": [
+        11
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.066606206582,
+      "kind": "z_phase",
+      "qubits": [
+        12
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.019577407369,
+      "kind": "z_phase",
+      "qubits": [
+        13
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.007743508115,
+      "kind": "z_phase",
+      "qubits": [
+        14
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.060915622685,
+      "kind": "z_phase",
+      "qubits": [
+        15
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.072377392405,
+      "kind": "z_phase",
+      "qubits": [
+        16
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.038639111166,
+      "kind": "z_phase",
+      "qubits": [
+        17
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.060169981891,
+      "kind": "z_phase",
+      "qubits": [
+        18
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.049084978591,
+      "kind": "z_phase",
+      "qubits": [
+        19
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.009629005112,
+      "kind": "z_phase",
+      "qubits": [
+        20
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.010336230848,
+      "kind": "z_phase",
+      "qubits": [
+        21
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.013980334798,
+      "kind": "z_phase",
+      "qubits": [
+        22
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.072335382514,
+      "kind": "z_phase",
+      "qubits": [
+        23
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.0173300586,
+      "kind": "z_phase",
+      "qubits": [
+        24
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.059775704736,
+      "kind": "z_phase",
+      "qubits": [
+        25
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.058382600415,
+      "kind": "z_phase",
+      "qubits": [
+        26
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.053952833549,
+      "kind": "z_phase",
+      "qubits": [
+        27
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.068507835752,
+      "kind": "z_phase",
+      "qubits": [
+        28
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.008359577292,
+      "kind": "z_phase",
+      "qubits": [
+        29
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.047250344526,
+      "kind": "z_phase",
+      "qubits": [
+        30
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.050774815776,
+      "kind": "z_phase",
+      "qubits": [
+        31
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.045297168595,
+      "kind": "z_phase",
+      "qubits": [
+        32
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.011874234807,
+      "kind": "z_phase",
+      "qubits": [
+        33
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.054429683939,
+      "kind": "z_phase",
+      "qubits": [
+        34
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.069323490399,
+      "kind": "z_phase",
+      "qubits": [
+        35
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.038279188861,
+      "kind": "z_phase",
+      "qubits": [
+        36
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.02489802278,
+      "kind": "z_phase",
+      "qubits": [
+        37
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.016788826962,
+      "kind": "z_phase",
+      "qubits": [
+        38
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.072587000274,
+      "kind": "z_phase",
+      "qubits": [
+        39
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.023730116984,
+      "kind": "z_phase",
+      "qubits": [
+        40
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.081189677858,
+      "kind": "z_phase",
+      "qubits": [
+        41
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.028092302576,
+      "edge_index": 0,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        0,
+        1
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.036469442336,
+      "edge_index": 1,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        2,
+        3
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.007486984083,
+      "edge_index": 2,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        4,
+        5
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.004306015187,
+      "edge_index": 3,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        6,
+        7
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.029789310053,
+      "edge_index": 4,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        8,
+        9
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.023041261481,
+      "edge_index": 5,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        10,
+        11
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.044552156113,
+      "edge_index": 6,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        12,
+        13
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.041854478833,
+      "edge_index": 7,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        14,
+        15
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.010839592774,
+      "edge_index": 8,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        16,
+        17
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.000574942263,
+      "edge_index": 9,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        18,
+        19
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.0257317651,
+      "edge_index": 10,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        20,
+        21
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.04008591074,
+      "edge_index": 11,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        22,
+        23
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.017004147812,
+      "edge_index": 12,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        24,
+        25
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.0295952736,
+      "edge_index": 13,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        26,
+        27
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.029855884436,
+      "edge_index": 14,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        28,
+        29
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.043896619374,
+      "edge_index": 15,
+      "edge_kind": "rung",
+      "kind": "zz_phase",
+      "qubits": [
+        30,
+        31
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.04209020914,
+      "edge_index": 16,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        0,
+        2
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.004268828156,
+      "edge_index": 17,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        1,
+        3
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.024878616491,
+      "edge_index": 18,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        2,
+        4
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.014652783993,
+      "edge_index": 19,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        3,
+        5
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.001559182791,
+      "edge_index": 20,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        4,
+        6
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.016050180603,
+      "edge_index": 21,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        5,
+        7
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.044070183094,
+      "edge_index": 22,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        6,
+        8
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.03183334678,
+      "edge_index": 23,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        7,
+        9
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.024970976318,
+      "edge_index": 24,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        8,
+        10
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.016708525082,
+      "edge_index": 25,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        9,
+        11
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.046084683478,
+      "edge_index": 26,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        10,
+        12
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.036794829543,
+      "edge_index": 27,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        11,
+        13
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.000752808551,
+      "edge_index": 28,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        12,
+        14
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.004451667066,
+      "edge_index": 29,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        13,
+        15
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.015258943021,
+      "edge_index": 30,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        14,
+        16
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.041389973516,
+      "edge_index": 31,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        15,
+        17
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.032896581373,
+      "edge_index": 32,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        16,
+        18
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.006283106113,
+      "edge_index": 33,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        17,
+        19
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.009650088853,
+      "edge_index": 34,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        18,
+        20
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.006957896518,
+      "edge_index": 35,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        19,
+        21
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.030550464472,
+      "edge_index": 36,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        20,
+        22
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.037023432423,
+      "edge_index": 37,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        21,
+        23
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.04348858985,
+      "edge_index": 38,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        22,
+        24
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.012198604372,
+      "edge_index": 39,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        23,
+        25
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.023238151651,
+      "edge_index": 40,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        24,
+        26
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.03343855258,
+      "edge_index": 41,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        25,
+        27
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.005289378621,
+      "edge_index": 42,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        26,
+        28
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.031463355904,
+      "edge_index": 43,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        27,
+        29
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.004073566927,
+      "edge_index": 44,
+      "edge_kind": "upper_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        28,
+        30
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.042224088103,
+      "edge_index": 45,
+      "edge_kind": "lower_rail",
+      "kind": "zz_phase",
+      "qubits": [
+        29,
+        31
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.015565001356,
+      "edge_index": 46,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        31,
+        32
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.005940433875,
+      "edge_index": 47,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        32,
+        33
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.012270270041,
+      "edge_index": 48,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        33,
+        34
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.019082871266,
+      "edge_index": 49,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        34,
+        35
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.021013016584,
+      "edge_index": 50,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        35,
+        36
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.023082487997,
+      "edge_index": 51,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        36,
+        37
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.009542206685,
+      "edge_index": 52,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        37,
+        38
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.00476935207,
+      "edge_index": 53,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        38,
+        39
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.029541924762,
+      "edge_index": 54,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        39,
+        40
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.029981588881,
+      "edge_index": 55,
+      "edge_kind": "block_ancilla_chain",
+      "kind": "zz_phase",
+      "qubits": [
+        40,
+        41
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.044490085955,
+      "kind": "x_mixer",
+      "qubits": [
+        1
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.040057079045,
+      "kind": "x_mixer",
+      "qubits": [
+        7
+      ],
+      "round": 3
+    },
+    {
+      "angle": 0.004294539106,
+      "kind": "x_mixer",
+      "qubits": [
+        13
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.024107443817,
+      "kind": "x_mixer",
+      "qubits": [
+        19
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.045677181583,
+      "kind": "x_mixer",
+      "qubits": [
+        25
+      ],
+      "round": 3
+    },
+    {
+      "angle": -0.010974384429,
+      "kind": "x_mixer",
+      "qubits": [
+        31
+      ],
+      "round": 3
+    }
+  ],
+  "terms_sha256": "df387a57cc327dbee7958d851e62aeba3302940d747510fd8febe540f523dc97",
+  "validation": {
+    "trusted_shots": {
+      "count": 9024,
+      "derivation": "For declared width n, shot index s, and qubit q with 0 <= q < n, choose state_alphabet[sha256(domain_separator|target_id|n|s|q)[0:8] mod len(state_alphabet)].",
+      "domain_separator": "matrixmul-lv16-varq-v3:trusted-shot:v1",
+      "state_alphabet": [
+        "0",
+        "1",
+        "+",
+        "-",
+        "i",
+        "-i"
+      ],
+      "stream_sha256": "9b817e97fa91cefaf1cbed55e06ca79b2cb4e0d3ed407c244043835cd8a470dc",
+      "width_range_stream_sha256": "80552788c64f677ca244fc405d70136e599710e24313c17af0d2457719c1cacf"
+    }
+  },
+  "verifier": {
+    "default_max_bond": 64,
+    "fidelity_atol": 1e-8,
+    "norm_atol": 1e-8,
+    "svd_cutoff": 1e-12
+  }
+}
