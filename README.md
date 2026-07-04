@@ -20,10 +20,7 @@ Use the local CLI help before changing code:
   node matrixmul.js preflight --help
   node matrixmul.js package --help
 
-Only edit files under src/matmul/. Do not rely on changes to benchmark.json,
-matrixmul.js, challenges/target_16q.json, src/util/*, Cargo.toml, Cargo.lock,
-score.json, or generated dist/* artifacts; those are infrastructure or local
-outputs and are not accepted as contender edits.
+Only edit files under src/matmul/.
 
 Optimize src/matmul/mod.rs so it generates a valid OpenQASM 3.0 circuit with
 an allowed declared width from 17 through 42, supported gates only, and lower
@@ -32,6 +29,7 @@ lower width unless a real same-width reference implementation is registered in
 the target metadata. Keep src/matmul/architecture.mmd
 updated with the required Algorithm and Optimization branches, and keep
 src/matmul/README.md updated with the submitted strategy and evidence.
+Build within repo workspace to avoid permission issues.
 
 For candidate changes, run:
 
