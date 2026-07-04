@@ -375,6 +375,15 @@ function targetMetadata(manifest) {
   return readJson(manifest.targetPath);
 }
 
+function officialReferenceWidths(target) {
+  const explicit = Array.isArray(target.official_reference_widths)
+    ? target.official_reference_widths
+    : Object.keys(target.references?.by_width || target.references_by_width || {});
+  return explicit
+    .map((width) => Number(width))
+    .filter((width) => Number.isInteger(width));
+}
+
 function scoreFromReport(report, candidate, manifest) {
   const target = targetMetadata(manifest);
   const validation = report.validation || {};
@@ -676,8 +685,26 @@ function validatePackage(metadata, options = {}) {
   if (typeof metadata.model !== "string" || !metadata.model.trim()) error("PACKAGE_MODEL", "model must be a non-empty string");
   if (metadata.scoreModel !== SCORE_MODEL) error("PACKAGE_SCORE_MODEL", `scoreModel must be ${SCORE_MODEL}`);
   if (metadata.targetId !== manifest.name) error("PACKAGE_TARGET_ID", `targetId must be ${manifest.name}`);
-  const targetHash = targetMetadata(manifest).metadata_sha256;
+  const target = targetMetadata(manifest);
+  const targetHash = target.metadata_sha256;
   if (metadata.targetMetadataSha256 !== targetHash) error("PACKAGE_TARGET_HASH", `targetMetadataSha256 must be ${targetHash}`);
+  const qubits = Number(metadata.scoreBreakdown?.qubits);
+  const minQubits = Number(target.limits?.min_qubits ?? target.logical_level ?? 1);
+  const maxQubits = Number(target.limits?.max_qubits ?? target.qubits);
+  if (!Number.isFinite(qubits) || qubits < 0) {
+    error("PACKAGE_QUBITS", "scoreBreakdown.qubits must be a non-negative finite number");
+  } else {
+    if (Number.isFinite(minQubits) && qubits < minQubits) {
+      error("PACKAGE_QUBITS", `scoreBreakdown.qubits must be at least ${minQubits}`);
+    }
+    if (Number.isFinite(maxQubits) && qubits > maxQubits) {
+      error("PACKAGE_QUBITS", `scoreBreakdown.qubits must be at most ${maxQubits}`);
+    }
+    const widths = officialReferenceWidths(target);
+    if (widths.length > 0 && !widths.includes(qubits)) {
+      error("PACKAGE_QUBITS_REFERENCE", `declared width ${qubits} has no official same-width reference registered for ${manifest.name}`);
+    }
+  }
 
   const score = localScore(metadata.metrics, metadata.scoreBreakdown);
   if (!scoresMatch(Number(metadata.localScore), score)) {

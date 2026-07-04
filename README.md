@@ -341,8 +341,9 @@ node .\matrixmul.js submit --watch
 
 Before uploading, `submit` validates the local package again and fetches the
 current track leaderboard. It rejects locally unless the validated score is
-strictly lower than the baseline or current best ranked score for
-`matrixmul-lv16-varq-v3`.
+strictly lower than the current best ranked, non-deleted score for
+`matrixmul-lv16-varq-v3`; if no ranked submissions exist yet, the first valid
+submission can establish the frontier.
 Use `--source-url URL` when you want the submission record to point at a public
 branch, commit, or pull request. Use `--api URL` only for a non-production
 contest server; the default API is `https://matrixmul.com`.
