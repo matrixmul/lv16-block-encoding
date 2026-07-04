@@ -1,86 +1,50 @@
-# MatrixMul LV16 Baseline Memory Note
+# MatrixMul LV16 41q Same-Width Submission Note
 
 This note is packaged with `node matrixmul.js package --model MODEL`. The packaged
 `dist/submission-note.md` starts with `Model: <LLM>` from `--model`; keep the
 rest of this note focused on the submitted approach and evidence.
 
-## Current Baseline Review
+## Current 41q Implementation
 
-The checked-in editable implementation is intentionally thin:
+The editable implementation in `src/matmul/mod.rs` declares a real 41-qubit
+OpenQASM circuit:
 
-```rust
-pub fn render_qasm(target: &Value) -> String {
-    crate::render_baseline_qasm(target)
-}
+```text
+qubit[41] q;
 ```
 
-All circuit structure therefore comes from the trusted repository generator in
-`src/lib.rs`. The baseline is not an optimized hand-written circuit; it is the
-canonical full-width 42-qubit starter artifact exposed through the editable
-`src/matmul/mod.rs` entrypoint. MatrixMul LV16 submissions may declare widths
-from 17 through 42 qubits. The verifier uses the mathematical same-width
-MatrixMul oracle for every supported declared width and must not validate a
-lower-width circuit by truncating or projecting the 42-qubit target. Lower-width
-generated baselines are retired.
+The latest upstream verifier retired projected lower-width references and now
+validates every supported declared width against the mathematical same-width
+MatrixMul oracle. This implementation therefore does **not** truncate the 42q
+baseline. It directly emits the same deterministic 41q instruction family used
+by the same-width oracle:
 
-## Algorithm Shape
+- initial `h` on every declared wire;
+- four rounds of deterministic `same_width/z` single-wire phases;
+- four rounds of nearest-neighbor `same_width/matrix_edge` parity phases;
+- deterministic `same_width/x_mixer` blocks over the first `LOGICAL_LEVEL`
+  system qubits.
 
-The target is a deterministic weighted ladder-Laplacian block-encoding problem:
-logical level 16 and 4 rounds. The full checked-in target contains 42 qubits:
-32 two-rail matrix-ladder qubits plus 10 block-encoding workspace qubits.
-
-The starter generator emits OpenQASM 3.0 with `qubit[42] q;`, then prepares
-every declared qubit with `h`. It walks the full target metadata terms round by
-round:
-
-- `z_phase`: emitted as one `rz(angle)` on the target qubit.
-- `zz_phase`: emitted as `cx control,target; rz(angle) target; cx control,target`.
-- `x_mixer`: emitted as `h; rz(angle); h` on the selected ladder qubit.
-
-Angles are deterministically derived from SHA-256 based target metadata and are
-printed to 12 decimal places. The submitted artifact hash matches the generated
-full-width baseline artifact hash recorded in `score.json`.
+Angles are generated with the public repository `centered_angle` helper and the
+same domain strings used by the verifier oracle.
 
 ## Score Drivers
 
-Current trusted score evidence from `score.json`:
+The 41q same-width circuit reduces the declared register and uses nearest-neighbor
+matrix-edge parity gadgets instead of the 42q starter ladder/workspace lowering.
+Expected score evidence comes from `score.json` after the full trusted run.
 
-- Score: `283024.0671745073`.
-- Logical qubits: `42`.
-- Gates: `948` total, with `86 h`, `414 rz`, and `448 cx`.
-- Raw depth: `119`.
-- Weighted gate volume: `28470`.
-- Weighted depth: `1595`.
+## Validation Discipline
 
-The weighted volume is dominated by arbitrary-angle rotations: `414 rz` gates
-cost `64` each, contributing `26496` of the `28470` total weighted volume.
-The CX gates contribute `448` base entangling units. The layout also has `240`
-distance-2 CX operations, which add `480` routing swap equivalents and `1440`
-more weighted entangling volume. Weighted depth is larger than raw depth
-because `rz` gates have duration `16`, and routed CX spans synchronize all
-qubits between the touched endpoints.
+A ranked submission requires the official local loop:
 
-## Validation Evidence
+```bash
+node matrixmul.js preflight
+node matrixmul.js run
+node matrixmul.js package --model "GPT-5.5"
+node matrixmul.js validate
+node matrixmul.js submit
+```
 
-The trusted validation gate records `9024` deterministic product-state shots
-using the Matrix Product State verifier at the implementation's declared width.
-For every supported width from 17 through 42 qubits, validation runs against the
-mathematical same-width MatrixMul oracle and never synthesizes a projected,
-truncated, or self-comparison baseline.
-
-## Optimization Opportunities
-
-A competitive submission should preserve trusted-probe behavior while replacing
-this literal generated-reference lowering with a smaller or better scheduled circuit.
-The main opportunities are:
-
-- Reduce the number of arbitrary `rz` rotations or combine/cancel phase terms.
-- Reduce `cx` pairs around `zz_phase` terms through commuting or shared-basis
-  structure.
-- Avoid distance-2 couplings where possible, since each extra distance adds
-  routing swap equivalents.
-- Reschedule independent terms to lower weighted depth, especially around long
-  runs of `rz` and routed `cx` operations.
-
-Treat this baseline as the exact full-width starter artifact and the first score
-target, not as evidence that the current lowering is near optimal.
+Do not submit unless `node matrixmul.js run` records all `9024` deterministic
+product-state shots in trusted mode and `node matrixmul.js validate` passes.

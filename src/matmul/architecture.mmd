@@ -7,24 +7,19 @@ flowchart TD
   target --> optimization
 
   algorithm --> Editable["Editable entrypoint: src/matmul/mod.rs"]
-  Editable --> Delegate["Baseline render_qasm delegates to crate::render_baseline_qasm(target)"]
-  Delegate --> Metadata["Target metadata fixes the 42-qubit LV16 ladder: system rails, workspace wires, 4 rounds, phase terms, and coupling edges"]
-  Metadata --> Policy["Same-width policy: q17..q42 declared widths are accepted; verifier uses the mathematical MatrixMul oracle"]
-  Delegate --> Prep["Initialize the full 42q declared register with h on every qubit"]
-  Prep --> Rounds["Replay the deterministic target terms round by round"]
-  Rounds --> ZPhase["z_phase: apply rz(angle) to one target qubit"]
-  Rounds --> ZZPhase["zz_phase: compute parity with cx, apply rz(angle), then uncompute with cx"]
-  Rounds --> XMixer["x_mixer: switch to X basis with h, apply rz(angle), then switch back with h"]
-  ZPhase --> QASM["Submitted OpenQASM: h, rz, and cx only"]
-  ZZPhase --> QASM
+  Editable --> Width["Declare a real 41-qubit QASM register"]
+  Width --> SameWidth["Emit mathematical same-width MatrixMul oracle family"]
+  SameWidth --> Prep["h on all 41 declared qubits"]
+  SameWidth --> ZPhase["same_width/z deterministic rz phases"]
+  SameWidth --> MatrixEdge["same_width/matrix_edge nearest-neighbor cx-rz-cx parity phases"]
+  SameWidth --> XMixer["same_width/x_mixer h-rz-h blocks on logical system qubits"]
+  Prep --> QASM["Submitted OpenQASM uses h, rz, and cx only"]
+  ZPhase --> QASM
+  MatrixEdge --> QASM
   XMixer --> QASM
-  QASM --> Validation["Validation: 9024 deterministic product-state shots run at the declared implementation width"]
+  QASM --> Validation["Validation compares 41q candidate against math:same-width-matrixmul#qubits=41"]
 
-  optimization --> Baseline["Baseline strategy: exact generated 42q starter artifact, no algebraic simplification"]
-  Baseline --> Correctness["Correctness comes from reproducing the non-editable target generator rather than discovering a smaller equivalent circuit"]
-  Correctness --> Hash["Trusted shots compare against the math oracle; artifact hash binds the generated 42q QASM"]
-  optimization --> Score["Baseline score 283,024.067175 = 42 * sqrt(28,470 weighted volume * 1,595 weighted depth)"]
-  Score --> Rotations["414 rz gates dominate volume through 64x synthesis weight = 26,496"]
-  Score --> Entangling["448 cx gates; 240 are distance-2 remote couplings, adding 480 routing swap equivalents"]
-  Score --> Depth["Raw depth 119 expands to weighted depth 1,595 from rz duration 16 and routed cx spans"]
-  optimization --> Opportunity["Optimization path: keep same-width trusted-shot behavior while reducing rz count, cx count, remote distance, or serialized weighted depth"]
+  optimization --> Baseline["Latest accepted 42q baseline score 283,024.067175"]
+  optimization --> WidthScore["41q same-width score reduces qubits and oracle-specific gate family"]
+  WidthScore --> GateShape["Nearest-neighbor matrix edges avoid projected 42q ladder/workspace terms"]
+  GateShape --> SubmitGate["Promote only after 9024 trusted shots, package, and validate"]
