@@ -35,7 +35,7 @@ For candidate changes, run:
 
   node matrixmul.js preflight
   node matrixmul.js run
-  node matrixmul.js package --model "model-name"
+  node matrixmul.js package --model "llm-model-name"
   node matrixmul.js validate
 ```
 
