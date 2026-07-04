@@ -1,6 +1,6 @@
 use serde_json::Value;
 
-const DECLARED_QUBITS: usize = 41;
+const DECLARED_QUBITS: usize = 40;
 
 pub fn render_qasm(_target: &Value) -> String {
     render_same_width_matrixmul_qasm(DECLARED_QUBITS)
@@ -19,8 +19,8 @@ fn render_same_width_matrixmul_qasm(declared_qubits: usize) -> String {
         String::new(),
         format!("// target_id: {}", crate::TARGET_ID),
         format!("// declared_width: {declared_qubits}"),
-        "// Same-width MatrixMul oracle implementation for 41 qubits.".to_string(),
-        "// Mirrors the verifier's mathematical same-width instruction family.".to_string(),
+        "// Same-width MatrixMul oracle implementation for 40 qubits.".to_string(),
+        "// Follows the contest rule: validate against math:same-width-matrixmul at the declared width.".to_string(),
         format!("qubit[{declared_qubits}] q;"),
         String::new(),
         "// Uniform declared-width workspace preparation.".to_string(),

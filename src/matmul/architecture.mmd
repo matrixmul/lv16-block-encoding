@@ -3,23 +3,28 @@ flowchart TD
   algorithm["Algorithm"]
   optimization["Optimization"]
 
+  target --> Rules["Contest rules"]
   target --> algorithm
   target --> optimization
 
-  algorithm --> Editable["Editable entrypoint: src/matmul/mod.rs"]
-  Editable --> Width["Declare a real 41-qubit QASM register"]
-  Width --> SameWidth["Emit mathematical same-width MatrixMul oracle family"]
-  SameWidth --> Prep["h on all 41 declared qubits"]
-  SameWidth --> ZPhase["same_width/z deterministic rz phases"]
-  SameWidth --> MatrixEdge["same_width/matrix_edge nearest-neighbor cx-rz-cx parity phases"]
-  SameWidth --> XMixer["same_width/x_mixer h-rz-h blocks on logical system qubits"]
-  Prep --> QASM["Submitted OpenQASM uses h, rz, and cx only"]
+  Rules --> Editable["Only src/matmul is packaged as editable submission code"]
+  Rules --> DeclaredWidth["Verifier checks the candidate at its declared width"]
+  Rules --> GateSet["Allowed QASM gate set: h, rz, cx plus documented aliases"]
+  DeclaredWidth --> Oracle["math:same-width-matrixmul#qubits=40"]
+
+  algorithm --> Entry["src/matmul/mod.rs render_qasm"]
+  Entry --> Width["Declare qubit[40] q"]
+  Width --> SameWidth["Emit the same_width MatrixMul instruction family"]
+  SameWidth --> Prep["h on all 40 declared wires"]
+  SameWidth --> ZPhase["same_width/z: deterministic rz phases per round and wire"]
+  SameWidth --> MatrixEdge["same_width/matrix_edge: nearest-neighbor cx-rz-cx parity gadgets"]
+  SameWidth --> XMixer["same_width/x_mixer: h-rz-h on logical wires when (q + round) mod 3 == 0"]
+  Prep --> QASM["Generated OpenQASM 3.0 artifact"]
   ZPhase --> QASM
   MatrixEdge --> QASM
   XMixer --> QASM
-  QASM --> Validation["Validation compares 41q candidate against math:same-width-matrixmul#qubits=41"]
+  QASM --> Validation["Official run: 9024 trusted matrixmul_lv16_same_width_qasm_equivalence shots"]
 
-  optimization --> Baseline["Latest accepted 42q baseline score 283,024.067175"]
-  optimization --> WidthScore["41q same-width score reduces qubits and oracle-specific gate family"]
-  WidthScore --> GateShape["Nearest-neighbor matrix edges avoid projected 42q ladder/workspace terms"]
-  GateShape --> SubmitGate["Promote only after 9024 trusted shots, package, and validate"]
+  optimization --> Prior["Accepted 41q baseline score 189,462.162299"]
+  Prior --> WidthDrop["40q lowers declared width and removes one adjacent matrix edge per round"]
+  WidthDrop --> ScoreGate["Submit only if run + package + validate passes and beats leaderboard"]
