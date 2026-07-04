@@ -375,15 +375,6 @@ function targetMetadata(manifest) {
   return readJson(manifest.targetPath);
 }
 
-function officialReferenceWidths(target) {
-  const explicit = Array.isArray(target.official_reference_widths)
-    ? target.official_reference_widths
-    : Object.keys(target.references?.by_width || target.references_by_width || {});
-  return explicit
-    .map((width) => Number(width))
-    .filter((width) => Number.isInteger(width));
-}
-
 function scoreFromReport(report, candidate, manifest) {
   const target = targetMetadata(manifest);
   const validation = report.validation || {};
@@ -699,10 +690,6 @@ function validatePackage(metadata, options = {}) {
     }
     if (Number.isFinite(maxQubits) && qubits > maxQubits) {
       error("PACKAGE_QUBITS", `scoreBreakdown.qubits must be at most ${maxQubits}`);
-    }
-    const widths = officialReferenceWidths(target);
-    if (widths.length > 0 && !widths.includes(qubits)) {
-      error("PACKAGE_QUBITS_REFERENCE", `declared width ${qubits} has no official same-width reference registered for ${manifest.name}`);
     }
   }
 

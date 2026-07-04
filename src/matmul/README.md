@@ -18,10 +18,10 @@ All circuit structure therefore comes from the trusted repository generator in
 `src/lib.rs`. The baseline is not an optimized hand-written circuit; it is the
 canonical full-width 42-qubit reference circuit exposed through the editable
 `src/matmul/mod.rs` entrypoint. MatrixMul LV16 submissions may declare widths
-from 17 through 42 qubits, but a lower width is valid only when the target
-metadata registers a real official reference implementation for that same
-width. The verifier must not validate a lower-width circuit by truncating the
-42-qubit target.
+from 17 through 42 qubits. The verifier must use the implementation's declared
+width consistently and must not validate a lower-width circuit by truncating or
+projecting the 42-qubit target. Lower-width generated baselines are retired;
+the fixed baseline remains the 42-qubit reference.
 
 ## Algorithm Shape
 

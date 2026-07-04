@@ -3,7 +3,7 @@ use std::fmt;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use block_encoding_matrix_lv16::render_reference_qasm;
+use block_encoding_matrix_lv16::render_baseline_qasm;
 use nalgebra::{DMatrix, linalg::SVD};
 use num_complex::Complex64;
 use serde::Deserialize;
@@ -371,7 +371,10 @@ fn next_parse<T: std::str::FromStr>(raw: &[String], i: usize, option: &str) -> R
         .map_err(|_| VerifyError(format!("invalid value for {option}")))
 }
 
-fn width_reference_entry(target_value: &serde_json::Value, width: usize) -> Option<&serde_json::Value> {
+fn width_reference_entry(
+    target_value: &serde_json::Value,
+    width: usize,
+) -> Option<&serde_json::Value> {
     target_value
         .get("references")
         .and_then(|references| references.get("by_width"))
@@ -384,21 +387,23 @@ fn select_official_reference(
     target: &Target,
     declared_width: usize,
 ) -> Result<ReferenceSelection> {
-    if declared_width == target.qubits {
-        let qasm = render_reference_qasm(target_value, target.qubits);
-        return Ok(ReferenceSelection {
-            label: format!("generated:src/util/generate_baseline.rs#qubits={}", target.qubits),
-            circuit: Some(parse_qasm_text(
-                "generated full-width reference",
-                &qasm,
-                &target.scoring,
-            )?),
-            expected_sha256: Some(target.reference.sha256.clone()),
-            errors: Vec::new(),
-        });
-    }
-
     let Some(entry) = width_reference_entry(target_value, declared_width) else {
+        if declared_width == target.qubits {
+            let qasm = render_baseline_qasm(target_value);
+            return Ok(ReferenceSelection {
+                label: format!(
+                    "generated:src/util/generate_baseline.rs#qubits={}",
+                    target.qubits
+                ),
+                circuit: Some(parse_qasm_text(
+                    "generated full-width reference",
+                    &qasm,
+                    &target.scoring,
+                )?),
+                expected_sha256: Some(target.reference.sha256.clone()),
+                errors: Vec::new(),
+            });
+        }
         return Ok(ReferenceSelection {
             label: format!("unregistered:official-reference#qubits={declared_width}"),
             circuit: None,
@@ -425,6 +430,19 @@ fn select_official_reference(
         });
     };
     if path.starts_with("generated:") {
+        if declared_width == target.qubits {
+            let qasm = render_baseline_qasm(target_value);
+            return Ok(ReferenceSelection {
+                label: path.to_string(),
+                circuit: Some(parse_qasm_text(
+                    "generated full-width reference",
+                    &qasm,
+                    &target.scoring,
+                )?),
+                expected_sha256,
+                errors: Vec::new(),
+            });
+        }
         return Ok(ReferenceSelection {
             label: path.to_string(),
             circuit: None,

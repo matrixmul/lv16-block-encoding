@@ -24,9 +24,9 @@ Only edit files under src/matmul/.
 
 Optimize src/matmul/mod.rs so it generates a valid OpenQASM 3.0 circuit with
 an allowed declared width from 17 through 42, supported gates only, and lower
-score while matching the official same-width trusted probe set. Do not claim a
-lower width unless a real same-width reference implementation is registered in
-the target metadata. Keep src/matmul/architecture.mmd
+score while matching the same-width trusted verifier contract. The verifier
+must reject any lower-width path that projects or truncates the fixed 42-qubit
+baseline; lower-width baseline generation is retired. Keep src/matmul/architecture.mmd
 updated with the required Algorithm and Optimization branches, and keep
 src/matmul/README.md updated with the submitted strategy and evidence.
 Build within repo workspace to avoid permission issues.
@@ -71,13 +71,12 @@ The live target is fixed by `challenges/target_16q.json`:
 The declared-width range is 17 through 42 qubits: 16 system qubits plus at
 least one workspace/control wire, up to the full 42-qubit block-encoding
 construction. No compression or prefix truncation is accepted as a validation
-shortcut. A candidate must match an official reference implementation for the
-same declared width on the trusted shots and stay inside the cost guards for
-size, gate count, two-qubit distance, weighted volume, and weighted depth. The
-checked-in target metadata currently registers the full 42-qubit reference; any
-lower-width track entry must add a real same-width reference rather than reusing
-the 42-qubit target with terms skipped. The accepted gate set is deliberately
-narrow: `h`, `x`, `y`,
+shortcut. The verifier must use the candidate's declared width consistently for
+reference selection and trusted shots, and it must reject any mismatch rather
+than projecting the 42-qubit target. The checked-in target metadata currently
+registers the full 42-qubit reference; lower-width generated baselines are
+retired and must not be synthesized by skipping terms. The accepted gate set is
+deliberately narrow: `h`, `x`, `y`,
 `z`, `rz`, `cx`, and `cnot`; `barrier` is allowed as a non-operational
 annotation. Measurement, reset, classical control, loops, and dynamic constructs
 are rejected.
@@ -102,7 +101,7 @@ src/matmul/mod.rs
 src/matmul/architecture.mmd
 src/matmul/README.md
 src/util/generate_target.rs
-src/util/generate_baseline.rs
+src/util/generate_baseline.rs  # retired fixed-42q reference hash checker
 src/util/generate_solution.rs
 src/util/verify.rs
 tools/trusted-worker.mjs
@@ -146,7 +145,7 @@ node .\matrixmul.js preflight
 
 Optimize the source code under `src/matmul`. It must generate an OpenQASM 3.0
 circuit that declares an allowed width from `qubit[17] q;` through
-`qubit[42] q;` and matches the official same-width trusted probe set.
+`qubit[42] q;` and matches the same-width trusted verifier contract.
 Keep
 `src/matmul/architecture.mmd` updated with a Mermaid diagram whose root is
 `Target circuit: MatrixMul LV16` and whose two top-level explanation branches

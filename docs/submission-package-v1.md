@@ -13,12 +13,12 @@ probe contract, not a symbolic proof of full operator equivalence. Cheap
 `preflight`, `smoke`, and small `--shot-count` runs are local reject paths and
 cannot be submitted.
 
-MatrixMul LV16 packages are rankable only when the submitted QASM declares a
-width from `qubit[17] q;` through `qubit[42] q;` and the target metadata
-registers an official reference implementation for that same width. The
-verifier must never validate a lower-width submission by truncating or
-projecting a wider target. The checked-in baseline currently registers the
-full 42-qubit reference.
+MatrixMul LV16 packages may declare any width from `qubit[17] q;` through
+`qubit[42] q;`. The trusted verifier must use the candidate's declared width
+consistently for reference selection and trusted shots, and it must never
+validate a lower-width submission by truncating or projecting the fixed
+42-qubit baseline. Generated lower-width baselines are retired; the checked-in
+baseline currently registers only the full 42-qubit reference.
 
 Required metadata fields include:
 

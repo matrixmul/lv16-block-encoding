@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "name": "matrixmul-lv16-varq-v3",
-  "description": "Optimize an OpenQASM 3.0 block-encoding matrix ladder circuit while matching the official same-width LV16 reference on the finite trusted probe set. Declared widths from 17 through 42 are allowed only when a real same-width reference implementation is registered.",
+  "description": "Optimize an OpenQASM 3.0 block-encoding matrix ladder circuit while matching the same-width LV16 validation contract on the finite trusted probe set. Declared widths from 17 through 42 are accepted by the package contract; the verifier must reject projection or truncation of the fixed 42-qubit baseline.",
   "scoreModel": "logical_hardware_volume_v1",
   "scoreNote": "score = qubits * sqrt(weighted_gate_volume * weighted_depth). For v1 gates: weighted_gate_volume = h+x+y+z + 64*rz + cx/cnot + 6*sum(extra two-qubit distance). Preflight rejects circuits that exceed the target cost guard before trusted shots run.",
   "category": "rust-openqasm",
