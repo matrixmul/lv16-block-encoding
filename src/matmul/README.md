@@ -66,8 +66,9 @@ The trusted validation gate records `9024` deterministic product-state shots
 using the Matrix Product State verifier at the implementation's declared width.
 For the current baseline that means comparing against the generated full-width
 42-qubit reference. For lower-width implementations with no registered
-reference artifact, validation runs against the submitted implementation itself
-and never synthesizes a projected or truncated lower-width baseline.
+reference artifact, validation runs against the mathematical same-width
+MatrixMul oracle and never synthesizes a projected or truncated lower-width
+baseline.
 
 ## Optimization Opportunities
 

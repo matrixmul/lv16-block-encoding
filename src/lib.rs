@@ -418,10 +418,10 @@ pub fn build_target_metadata() -> Value {
         (
             "width_policy",
             json!(
-                "The verifier must validate candidates against an official reference for the \
-                 same declared width. The stored sha256 is the full 42-qubit target reference; \
-                 lower-width references must be separately registered and are never synthesized \
-                 by truncating the 42-qubit target."
+                "The stored sha256 is the full 42-qubit target reference. Lower-width \
+                 submissions from 17 through 41 qubits are validated against the mathematical \
+                 same-width MatrixMul oracle for their declared width; the verifier never \
+                 projects or truncates the 42-qubit target."
             ),
         ),
     ]);
@@ -432,8 +432,9 @@ pub fn build_target_metadata() -> Value {
         (
             "policy",
             json!(
-                "A declared width is valid only when an official same-width reference exists. \
-                 Do not project a wider target by skipping terms outside the declared width."
+                "The 42-qubit width uses the fixed generated baseline reference. Lower declared \
+                 widths use the mathematical same-width MatrixMul oracle; do not project a wider \
+                 target by skipping terms outside the declared width."
             ),
         ),
         ("by_width", Value::Object(by_width)),

@@ -3,7 +3,9 @@ use std::fmt;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use block_encoding_matrix_lv16::render_baseline_qasm;
+use block_encoding_matrix_lv16::{
+    LOGICAL_LEVEL, ROUND_COUNT, centered_angle, render_baseline_qasm,
+};
 use nalgebra::{DMatrix, linalg::SVD};
 use num_complex::Complex64;
 use serde::Deserialize;
@@ -123,9 +125,23 @@ struct Reference {
     sha256: String,
 }
 
+enum ValidationOracle {
+    Circuit(Circuit),
+    SameWidthMatrixMul { qubits: usize },
+}
+
+impl ValidationOracle {
+    fn sha256(&self) -> Option<String> {
+        match self {
+            Self::Circuit(circuit) => Some(circuit.sha256.clone()),
+            Self::SameWidthMatrixMul { .. } => None,
+        }
+    }
+}
+
 struct ReferenceSelection {
     label: String,
-    circuit: Option<Circuit>,
+    oracle: Option<ValidationOracle>,
     expected_sha256: Option<String>,
     errors: Vec<String>,
 }
@@ -349,7 +365,7 @@ fn print_help() {
         "Usage: verify <candidate.qasm> [--target PATH] [--reference PATH] [--preflight|--smoke]\n\
          \n\
          By default, a registered same-width reference is used when present; otherwise\n\
-         lower-width candidates are validated as submitted implementations without projection.\n\
+         lower-width candidates are validated against the mathematical same-width MatrixMul oracle.\n\
          Trusted mode defaults to all 9024 deterministic shots. Use --shot-count N\n\
          or --shot-shard INDEX/TOTAL for bounded local checks and CI sharding.\n\
          Use --truncation-error-atol X to override the MPS truncation failure threshold."
@@ -386,9 +402,8 @@ fn select_official_reference(
     target_path: &Path,
     target_value: &serde_json::Value,
     target: &Target,
-    candidate: &Circuit,
+    declared_width: usize,
 ) -> Result<ReferenceSelection> {
-    let declared_width = candidate.qubits;
     let Some(entry) = width_reference_entry(target_value, declared_width) else {
         if declared_width == target.qubits {
             let qasm = render_baseline_qasm(target_value);
@@ -397,18 +412,20 @@ fn select_official_reference(
                     "generated:src/util/generate_baseline.rs#qubits={}",
                     target.qubits
                 ),
-                circuit: Some(parse_qasm_text(
+                oracle: Some(ValidationOracle::Circuit(parse_qasm_text(
                     "generated full-width reference",
                     &qasm,
                     &target.scoring,
-                )?),
+                )?)),
                 expected_sha256: Some(target.reference.sha256.clone()),
                 errors: Vec::new(),
             });
         }
         return Ok(ReferenceSelection {
-            label: format!("implementation:self#qubits={declared_width}"),
-            circuit: Some(candidate.clone()),
+            label: format!("math:same-width-matrixmul#qubits={declared_width}"),
+            oracle: Some(ValidationOracle::SameWidthMatrixMul {
+                qubits: declared_width,
+            }),
             expected_sha256: None,
             errors: Vec::new(),
         });
@@ -421,7 +438,7 @@ fn select_official_reference(
     let Some(path) = entry.get("path").and_then(serde_json::Value::as_str) else {
         return Ok(ReferenceSelection {
             label: format!("invalid:official-reference#qubits={declared_width}"),
-            circuit: None,
+            oracle: None,
             expected_sha256,
             errors: vec![format!(
                 "official reference for declared width {declared_width} is missing a QASM path"
@@ -433,18 +450,18 @@ fn select_official_reference(
             let qasm = render_baseline_qasm(target_value);
             return Ok(ReferenceSelection {
                 label: path.to_string(),
-                circuit: Some(parse_qasm_text(
+                oracle: Some(ValidationOracle::Circuit(parse_qasm_text(
                     "generated full-width reference",
                     &qasm,
                     &target.scoring,
-                )?),
+                )?)),
                 expected_sha256,
                 errors: Vec::new(),
             });
         }
         return Ok(ReferenceSelection {
             label: path.to_string(),
-            circuit: None,
+            oracle: None,
             expected_sha256,
             errors: vec![format!(
                 "official reference for declared width {declared_width} must be an actual same-width QASM artifact, not a generated projection"
@@ -463,7 +480,10 @@ fn select_official_reference(
     };
     Ok(ReferenceSelection {
         label: reference_path.display().to_string(),
-        circuit: Some(parse_qasm(&reference_path, &target.scoring)?),
+        oracle: Some(ValidationOracle::Circuit(parse_qasm(
+            &reference_path,
+            &target.scoring,
+        )?)),
         expected_sha256,
         errors: Vec::new(),
     })
@@ -480,30 +500,45 @@ fn verify(args: &Args) -> Result<serde_json::Value> {
     let reference_selection = if let Some(reference_path) = &args.reference {
         ReferenceSelection {
             label: reference_path.display().to_string(),
-            circuit: Some(parse_qasm(reference_path, &target.scoring)?),
+            oracle: Some(ValidationOracle::Circuit(parse_qasm(
+                reference_path,
+                &target.scoring,
+            )?)),
             expected_sha256: None,
             errors: Vec::new(),
         }
     } else {
-        select_official_reference(&args.target, &target_value, &target, &candidate)?
+        select_official_reference(&args.target, &target_value, &target, candidate.qubits)?
     };
     let reference_label = reference_selection.label;
-    let reference = reference_selection.circuit;
+    let oracle = reference_selection.oracle;
     errors.extend(reference_selection.errors);
 
-    if let Some(reference) = &reference {
-        if reference.qubits != candidate.qubits {
-            errors.push(format!(
-                "reference width mismatch: candidate declares {}, reference declares {}",
-                candidate.qubits, reference.qubits
-            ));
-        }
-        if let Some(expected) = reference_selection.expected_sha256.as_deref() {
-            if reference.sha256 != expected {
-                errors.push(format!(
-                    "reference hash mismatch: expected {}, got {}",
-                    expected, reference.sha256
-                ));
+    if let Some(oracle) = &oracle {
+        match oracle {
+            ValidationOracle::Circuit(reference) => {
+                if reference.qubits != candidate.qubits {
+                    errors.push(format!(
+                        "reference width mismatch: candidate declares {}, reference declares {}",
+                        candidate.qubits, reference.qubits
+                    ));
+                }
+                if let Some(expected) = reference_selection.expected_sha256.as_deref() {
+                    if reference.sha256 != expected {
+                        errors.push(format!(
+                            "reference hash mismatch: expected {}, got {}",
+                            expected, reference.sha256
+                        ));
+                    }
+                }
+            }
+            ValidationOracle::SameWidthMatrixMul { qubits } => {
+                if *qubits != candidate.qubits {
+                    errors.push(format!(
+                        "oracle width mismatch: candidate declares {}, oracle declares {}",
+                        candidate.qubits, qubits
+                    ));
+                }
             }
         }
     }
@@ -524,9 +559,9 @@ fn verify(args: &Args) -> Result<serde_json::Value> {
 
     let mut shot_reports = Vec::new();
     if errors.is_empty() {
-        let reference = reference
+        let oracle = oracle
             .as_ref()
-            .expect("reference circuit must exist when there are no validation errors");
+            .expect("validation oracle must exist when there are no validation errors");
         for shot in &shots {
             if shot.states.len() != candidate.qubits {
                 return Err(VerifyError(format!(
@@ -536,7 +571,7 @@ fn verify(args: &Args) -> Result<serde_json::Value> {
                     candidate.qubits
                 )));
             }
-            let reference_state = simulate(reference, &shot.states, max_bond, cutoff)?;
+            let reference_state = simulate_oracle(oracle, &shot.states, max_bond, cutoff)?;
             let candidate_state = simulate(&candidate, &shot.states, max_bond, cutoff)?;
             let overlap = inner_product(&reference_state, &candidate_state);
             let reference_norm = inner_product(&reference_state, &reference_state).re;
@@ -583,7 +618,7 @@ fn verify(args: &Args) -> Result<serde_json::Value> {
         "candidate": args.candidate.display().to_string(),
         "candidate_sha256": candidate.sha256,
         "reference": reference_label,
-        "reference_sha256": reference.as_ref().map(|reference| reference.sha256.clone()),
+        "reference_sha256": oracle.as_ref().and_then(ValidationOracle::sha256),
         "score": score_breakdown["score"],
         "score_breakdown": score_breakdown,
         "metrics": metrics_json(&candidate.metrics),
@@ -1237,6 +1272,91 @@ fn simulate(circuit: &Circuit, states: &[String], max_bond: usize, cutoff: f64) 
         }
     }
     Ok(sim)
+}
+
+fn simulate_oracle(
+    oracle: &ValidationOracle,
+    states: &[String],
+    max_bond: usize,
+    cutoff: f64,
+) -> Result<Mps> {
+    match oracle {
+        ValidationOracle::Circuit(circuit) => simulate(circuit, states, max_bond, cutoff),
+        ValidationOracle::SameWidthMatrixMul { qubits } => {
+            simulate_same_width_matrixmul_oracle(*qubits, states, max_bond, cutoff)
+        }
+    }
+}
+
+fn simulate_same_width_matrixmul_oracle(
+    declared_qubits: usize,
+    states: &[String],
+    max_bond: usize,
+    cutoff: f64,
+) -> Result<Mps> {
+    if states.len() != declared_qubits {
+        return Err(VerifyError(format!(
+            "oracle state width mismatch: got {}, expected {}",
+            states.len(),
+            declared_qubits
+        )));
+    }
+    if declared_qubits <= LOGICAL_LEVEL {
+        return Err(VerifyError(format!(
+            "declared width {declared_qubits} must include {LOGICAL_LEVEL} system qubits plus workspace"
+        )));
+    }
+
+    let mut sim = Mps::new(states, max_bond, cutoff)?;
+    let width_s = declared_qubits.to_string();
+    for q in 0..declared_qubits {
+        apply_single_named(&mut sim, q, "h", &[])?;
+    }
+
+    for round in 0..ROUND_COUNT {
+        let round_s = round.to_string();
+
+        for q in 0..declared_qubits {
+            let q_s = q.to_string();
+            let angle = centered_angle(0.083, &["same_width", "z", &width_s, &round_s, &q_s]);
+            apply_single_named(&mut sim, q, "rz", &[angle])?;
+        }
+
+        for q in 0..declared_qubits - 1 {
+            let q_s = q.to_string();
+            let angle = centered_angle(
+                0.047,
+                &["same_width", "matrix_edge", &width_s, &round_s, &q_s],
+            );
+            apply_two_named(&mut sim, q, q + 1, "cx")?;
+            apply_single_named(&mut sim, q + 1, "rz", &[angle])?;
+            apply_two_named(&mut sim, q, q + 1, "cx")?;
+        }
+
+        for q in 0..LOGICAL_LEVEL {
+            if (q + round) % 3 == 0 {
+                let q_s = q.to_string();
+                let angle =
+                    centered_angle(0.059, &["same_width", "x_mixer", &width_s, &round_s, &q_s]);
+                apply_single_named(&mut sim, q, "h", &[])?;
+                apply_single_named(&mut sim, q, "rz", &[angle])?;
+                apply_single_named(&mut sim, q, "h", &[])?;
+            }
+        }
+    }
+
+    Ok(sim)
+}
+
+fn apply_single_named(sim: &mut Mps, q: usize, name: &str, params: &[f64]) -> Result<()> {
+    let gate = single_gate_matrix(name, params)?;
+    sim.apply_single(q, gate);
+    Ok(())
+}
+
+fn apply_two_named(sim: &mut Mps, q0: usize, q1: usize, name: &str) -> Result<()> {
+    let gate = two_gate_matrix(name, &[])?;
+    sim.apply_two(q0, q1, gate)
 }
 
 impl Mps {

@@ -157,8 +157,9 @@ baseline; there is no separate `submissions` folder.
 metadata hashing. The verifier uses the candidate's declared width when building
 trusted probe states. If an actual same-width reference artifact is registered,
 the verifier compares against it. If no lower-width reference exists, the
-verifier validates the submitted implementation at its declared width without
-synthesizing a projected or truncated reference.
+verifier computes the expected behavior with the mathematical same-width
+MatrixMul oracle for that declared width, without projecting or truncating the
+42-qubit baseline.
 
 For a score candidate:
 
@@ -236,8 +237,9 @@ have to preserve the baseline lowering. Useful primitives to investigate:
   unrelated rotations, and prefer layouts that keep two-qubit distance at 1.
 - **Ancilla lifetime shortening.** The baseline declares 42 qubits, including
   10 block-encoding workspace qubits. A lower declared width is rankable when
-  the submitted implementation actually declares and executes that width; do
-  not treat skipped higher-width terms as a valid lower-width implementation.
+  the submitted implementation matches the same-width MatrixMul oracle; do not
+  treat skipped higher-width terms as a valid lower-width
+  implementation.
 - **Finite-probe equivalence checks.** The trusted gate is the fixed 9024-shot
   product-state probe set, not symbolic equality over all states. Prefer
   algebraic equivalence where possible, but always confirm candidate shortcuts
@@ -280,9 +282,9 @@ Generated circuits must:
   for score tradeoffs, search choices, and simplifications.
 - Declare a supported width from `qubit[17] q;` through `qubit[42] q;`.
   Width 17 is the lower bound because the 16-qubit system register needs at
-  least one workspace/control wire. The verifier validates the implementation
-  at that declared width and rejects projection or truncation of the 42-qubit
-  baseline.
+  least one workspace/control wire. The verifier validates against the
+  same-width MatrixMul oracle for that declared width and rejects projection or
+  truncation of the 42-qubit baseline.
 - Use only supported unitary gates: `h`, `x`, `y`, `z`, `rz`, `cx`, and `cnot`.
   `barrier` directives are allowed as non-operational annotations and ignored by
   the verifier.

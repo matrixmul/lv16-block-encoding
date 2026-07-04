@@ -21,7 +21,9 @@ const submissionPath = path.join(workDir, "submission.json");
 const validationResultPath = path.join(workDir, "validation-result.json");
 const NOTE_TEXT = "trusted worker reproduction";
 const VALIDATION_CHECK_ALIASES = new Map([
-  ["equivalence to official same-width reference circuit", "same-width implementation validation"]
+  ["equivalence to official same-width reference circuit", "same-width MatrixMul oracle validation"],
+  ["same-width implementation validation", "same-width MatrixMul oracle validation"],
+  ["same-width MatrixMul circuit validation", "same-width MatrixMul oracle validation"]
 ]);
 
 function fail(message) {

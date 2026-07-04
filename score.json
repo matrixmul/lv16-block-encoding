@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "benchmark": "matrixmul-lv16-varq-v3",
   "targetId": "matrixmul-lv16-varq-v3",
-  "targetMetadataSha256": "4580d1f37eb7b4dcb470ab527ae064b0dcf7ab632ca484fb49f93d92df775e6e",
+  "targetMetadataSha256": "051499bc88a34ac6f8d83294d87d0e5f8da532ef82e9b2f39dbf2140d1ad028e",
   "status": "ranked",
   "score": 283024.0671745073,
   "score_model": "logical_hardware_volume_v1",
@@ -97,7 +97,7 @@
     "mode": "trusted",
     "gate": "matrixmul_lv16_same_width_qasm_equivalence",
     "checks": [
-      "same-width implementation validation",
+      "same-width MatrixMul oracle validation",
       "same-width QASM ABI",
       "all deterministic product-state probes",
       "MPS tolerance"
@@ -106,5 +106,5 @@
   "artifact": "dist/solution.qasm",
   "artifactSha256": "ccf8907478ff1917e8b8e1db5746335e9a427ae7c44782a5fa8bb23add7b5250",
   "referenceSha256": "ccf8907478ff1917e8b8e1db5746335e9a427ae7c44782a5fa8bb23add7b5250",
-  "generatedAt": "2026-07-04T14:32:53.047Z"
+  "generatedAt": "2026-07-04T20:17:52.464Z"
 }

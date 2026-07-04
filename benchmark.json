@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "name": "matrixmul-lv16-varq-v3",
-  "description": "Optimize an OpenQASM 3.0 block-encoding matrix ladder circuit while matching the same-width LV16 validation contract on the finite trusted probe set. Declared widths from 17 through 42 are accepted by the package contract; the verifier must reject projection or truncation of the fixed 42-qubit baseline.",
+  "description": "Optimize an OpenQASM 3.0 block-encoding matrix ladder circuit while matching the same-width LV16 MatrixMul oracle on the finite trusted probe set. Declared widths from 17 through 42 are accepted by the package contract; the verifier must reject projection or truncation of the fixed 42-qubit baseline.",
   "scoreModel": "logical_hardware_volume_v1",
   "scoreNote": "score = qubits * sqrt(weighted_gate_volume * weighted_depth). For v1 gates: weighted_gate_volume = h+x+y+z + 64*rz + cx/cnot + 6*sum(extra two-qubit distance). Preflight rejects circuits that exceed the target cost guard before trusted shots run.",
   "category": "rust-openqasm",
@@ -28,7 +28,7 @@
   "trustedShots": 9024,
   "validationGate": "matrixmul_lv16_same_width_qasm_equivalence",
   "requiredValidationChecks": [
-    "same-width implementation validation",
+    "same-width MatrixMul oracle validation",
     "same-width QASM ABI",
     "all deterministic product-state probes",
     "MPS tolerance"

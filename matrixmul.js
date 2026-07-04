@@ -28,13 +28,15 @@ const REQUIRED_ARCHITECTURE_LABELS = [
   "Optimization"
 ];
 const REQUIRED_CHECKS = [
-  "same-width implementation validation",
+  "same-width MatrixMul oracle validation",
   "same-width QASM ABI",
   "all deterministic product-state probes",
   "MPS tolerance"
 ];
 const VALIDATION_CHECK_ALIASES = new Map([
-  ["equivalence to official same-width reference circuit", "same-width implementation validation"]
+  ["equivalence to official same-width reference circuit", "same-width MatrixMul oracle validation"],
+  ["same-width implementation validation", "same-width MatrixMul oracle validation"],
+  ["same-width MatrixMul circuit validation", "same-width MatrixMul oracle validation"]
 ]);
 const VALUE_FLAGS = new Set([
   "--api",
