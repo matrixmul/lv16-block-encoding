@@ -35,7 +35,7 @@ fn run() -> Result<(), String> {
             }
             "--qubits" | "--all-widths" => {
                 return Err(
-                    "lower-width baseline generation has been removed; register an actual same-width reference artifact instead"
+                    "lower-width baseline generation has been removed; submit an actual declared-width implementation instead"
                         .to_string(),
                 );
             }

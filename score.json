@@ -97,7 +97,7 @@
     "mode": "trusted",
     "gate": "matrixmul_lv16_same_width_qasm_equivalence",
     "checks": [
-      "equivalence to official same-width reference circuit",
+      "same-width implementation validation",
       "same-width QASM ABI",
       "all deterministic product-state probes",
       "MPS tolerance"

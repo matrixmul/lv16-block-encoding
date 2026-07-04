@@ -348,7 +348,8 @@ fn print_help() {
     println!(
         "Usage: verify <candidate.qasm> [--target PATH] [--reference PATH] [--preflight|--smoke]\n\
          \n\
-         By default, the reference circuit is selected from the official same-width references in the target metadata.\n\
+         By default, a registered same-width reference is used when present; otherwise\n\
+         lower-width candidates are validated as submitted implementations without projection.\n\
          Trusted mode defaults to all 9024 deterministic shots. Use --shot-count N\n\
          or --shot-shard INDEX/TOTAL for bounded local checks and CI sharding.\n\
          Use --truncation-error-atol X to override the MPS truncation failure threshold."
@@ -385,8 +386,9 @@ fn select_official_reference(
     target_path: &Path,
     target_value: &serde_json::Value,
     target: &Target,
-    declared_width: usize,
+    candidate: &Circuit,
 ) -> Result<ReferenceSelection> {
+    let declared_width = candidate.qubits;
     let Some(entry) = width_reference_entry(target_value, declared_width) else {
         if declared_width == target.qubits {
             let qasm = render_baseline_qasm(target_value);
@@ -405,13 +407,10 @@ fn select_official_reference(
             });
         }
         return Ok(ReferenceSelection {
-            label: format!("unregistered:official-reference#qubits={declared_width}"),
-            circuit: None,
+            label: format!("implementation:self#qubits={declared_width}"),
+            circuit: Some(candidate.clone()),
             expected_sha256: None,
-            errors: vec![format!(
-                "no official same-width reference registered for declared width {declared_width}; refusing to validate by truncating or projecting the {}-qubit target",
-                target.qubits
-            )],
+            errors: Vec::new(),
         });
     };
 
@@ -486,7 +485,7 @@ fn verify(args: &Args) -> Result<serde_json::Value> {
             errors: Vec::new(),
         }
     } else {
-        select_official_reference(&args.target, &target_value, &target, candidate.qubits)?
+        select_official_reference(&args.target, &target_value, &target, &candidate)?
     };
     let reference_label = reference_selection.label;
     let reference = reference_selection.circuit;

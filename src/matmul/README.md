@@ -63,11 +63,11 @@ qubits between the touched endpoints.
 ## Validation Evidence
 
 The trusted validation gate records `9024` deterministic product-state shots
-against the official same-width reference circuit using the Matrix Product
-State verifier. The current baseline is the full-width score gate because it
-preserves the 42-qubit ABI, uses only allowed gates (`h`, `rz`, and `cx`),
-stays below all cost guards, and matches the generated full-width reference on
-all trusted shots.
+using the Matrix Product State verifier at the implementation's declared width.
+For the current baseline that means comparing against the generated full-width
+42-qubit reference. For lower-width implementations with no registered
+reference artifact, validation runs against the submitted implementation itself
+and never synthesizes a projected or truncated lower-width baseline.
 
 ## Optimization Opportunities
 

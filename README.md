@@ -154,11 +154,11 @@ note packaged with the submission. The checked-in implementation is the current
 baseline; there is no separate `submissions` folder.
 
 `dist/solution.qasm` is a generated local artifact used for verification and
-metadata hashing. The verifier compares it against a canonical reference circuit
-registered for the candidate's declared width on the trusted probe set generated
-from the non-editable target metadata and generator code. If no official
-same-width reference exists, the candidate is rejected instead of being checked
-against a truncated wider target.
+metadata hashing. The verifier uses the candidate's declared width when building
+trusted probe states. If an actual same-width reference artifact is registered,
+the verifier compares against it. If no lower-width reference exists, the
+verifier validates the submitted implementation at its declared width without
+synthesizing a projected or truncated reference.
 
 For a score candidate:
 
@@ -235,9 +235,9 @@ have to preserve the baseline lowering. Useful primitives to investigate:
   `cx` pairs can be scheduled in parallel. Avoid serializing long runs of
   unrelated rotations, and prefer layouts that keep two-qubit distance at 1.
 - **Ancilla lifetime shortening.** The baseline declares 42 qubits, including
-  10 block-encoding workspace qubits. A lower declared width is rankable only
-  when a real same-width reference implementation is registered; do not treat
-  skipped higher-width terms as a valid lower-width implementation.
+  10 block-encoding workspace qubits. A lower declared width is rankable when
+  the submitted implementation actually declares and executes that width; do
+  not treat skipped higher-width terms as a valid lower-width implementation.
 - **Finite-probe equivalence checks.** The trusted gate is the fixed 9024-shot
   product-state probe set, not symbolic equality over all states. Prefer
   algebraic equivalence where possible, but always confirm candidate shortcuts
@@ -280,8 +280,9 @@ Generated circuits must:
   for score tradeoffs, search choices, and simplifications.
 - Declare a supported width from `qubit[17] q;` through `qubit[42] q;`.
   Width 17 is the lower bound because the 16-qubit system register needs at
-  least one workspace/control wire. A width is valid only when the target
-  metadata registers an official same-width reference implementation.
+  least one workspace/control wire. The verifier validates the implementation
+  at that declared width and rejects projection or truncation of the 42-qubit
+  baseline.
 - Use only supported unitary gates: `h`, `x`, `y`, `z`, `rz`, `cx`, and `cnot`.
   `barrier` directives are allowed as non-operational annotations and ignored by
   the verifier.

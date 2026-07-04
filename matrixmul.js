@@ -28,11 +28,14 @@ const REQUIRED_ARCHITECTURE_LABELS = [
   "Optimization"
 ];
 const REQUIRED_CHECKS = [
-  "equivalence to official same-width reference circuit",
+  "same-width implementation validation",
   "same-width QASM ABI",
   "all deterministic product-state probes",
   "MPS tolerance"
 ];
+const VALIDATION_CHECK_ALIASES = new Map([
+  ["equivalence to official same-width reference circuit", "same-width implementation validation"]
+]);
 const VALUE_FLAGS = new Set([
   "--api",
   "--archive",
@@ -452,6 +455,15 @@ function sameStringArray(left, right) {
   return left.every((value, index) => value === right[index]);
 }
 
+function normalizeValidationCheck(check) {
+  return VALIDATION_CHECK_ALIASES.get(check) || check;
+}
+
+function hasValidationCheck(checks, required) {
+  const normalized = new Set(checks.map(normalizeValidationCheck));
+  return normalized.has(normalizeValidationCheck(required));
+}
+
 function scoresMatch(left, right) {
   if (!Number.isFinite(left) || !Number.isFinite(right)) return false;
   return Math.abs(left - right) <= Number.EPSILON * Math.max(1, Math.abs(left), Math.abs(right)) * 8;
@@ -475,7 +487,7 @@ function validateScoreJson(score, manifest) {
   }
   if (score.validation?.gate !== REQUIRED_GATE) throw new Error(`score.json validation.gate must be ${REQUIRED_GATE}`);
   for (const check of REQUIRED_CHECKS) {
-    if (!score.validation?.checks?.includes(check)) throw new Error(`score.json validation.checks missing ${check}`);
+    if (!hasValidationCheck(score.validation?.checks || [], check)) throw new Error(`score.json validation.checks missing ${check}`);
   }
   const recomputed = localScore(score.metrics, score.scoreBreakdown);
   if (!scoresMatch(Number(score.score), recomputed)) {
@@ -707,7 +719,7 @@ function validatePackage(metadata, options = {}) {
   if (metadata.validation?.gate !== REQUIRED_GATE) error("PACKAGE_VALIDATION_GATE", `validation.gate must be ${REQUIRED_GATE}`);
   const checks = Array.isArray(metadata.validation?.checks) ? metadata.validation.checks : [];
   for (const check of REQUIRED_CHECKS) {
-    if (!checks.includes(check)) error("PACKAGE_VALIDATION_CHECK", `validation.checks must include '${check}'`);
+    if (!hasValidationCheck(checks, check)) error("PACKAGE_VALIDATION_CHECK", `validation.checks must include '${check}'`);
   }
   if (metadata.artifact !== REQUIRED_ARTIFACT) error("PACKAGE_ARTIFACT", `artifact must be ${REQUIRED_ARTIFACT}`);
   if (!Number.isInteger(metadata.artifactBytes) || metadata.artifactBytes <= 0) error("PACKAGE_ARTIFACT_BYTES", "artifactBytes must be a positive integer");

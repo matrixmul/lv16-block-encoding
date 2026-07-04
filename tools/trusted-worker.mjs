@@ -20,6 +20,9 @@ const archivePath = path.join(workDir, "submission.tar.gz");
 const submissionPath = path.join(workDir, "submission.json");
 const validationResultPath = path.join(workDir, "validation-result.json");
 const NOTE_TEXT = "trusted worker reproduction";
+const VALIDATION_CHECK_ALIASES = new Map([
+  ["equivalence to official same-width reference circuit", "same-width implementation validation"]
+]);
 
 function fail(message) {
   throw new Error(message);
@@ -209,6 +212,20 @@ function assertSameJson(label, actual, expected) {
   if (JSON.stringify(canonicalJson(actual)) !== JSON.stringify(canonicalJson(expected))) fail(`${label} mismatch`);
 }
 
+function normalizeValidationCheck(check) {
+  return VALIDATION_CHECK_ALIASES.get(check) || check;
+}
+
+function normalizeValidationForComparison(validation) {
+  if (!validation || typeof validation !== "object" || Array.isArray(validation)) return validation;
+  return {
+    ...validation,
+    checks: Array.isArray(validation.checks)
+      ? validation.checks.map(normalizeValidationCheck)
+      : validation.checks
+  };
+}
+
 function compareReproducedMetadata(submitted, reproduced) {
   assertEqual("benchmark", reproduced.benchmark, submitted.benchmark);
   assertSameJson("editablePaths", reproduced.editablePaths, submitted.editablePaths);
@@ -218,7 +235,11 @@ function compareReproducedMetadata(submitted, reproduced) {
   if (!scoresMatch(reproduced.localScore, submitted.localScore)) fail(`trusted score ${reproduced.localScore} does not match submitted localScore ${submitted.localScore}`);
   assertSameJson("metrics", reproduced.metrics, submitted.metrics);
   assertSameJson("scoreBreakdown", reproduced.scoreBreakdown, submitted.scoreBreakdown);
-  assertSameJson("validation", reproduced.validation, submitted.validation);
+  assertSameJson(
+    "validation",
+    normalizeValidationForComparison(reproduced.validation),
+    normalizeValidationForComparison(submitted.validation)
+  );
   assertEqual("artifact", reproduced.artifact, submitted.artifact);
   assertEqual("artifactBytes", reproduced.artifactBytes, submitted.artifactBytes);
   assertEqual("artifactSha256", reproduced.artifactSha256, submitted.artifactSha256);

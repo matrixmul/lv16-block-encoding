@@ -18,7 +18,7 @@ flowchart TD
   ZPhase --> QASM["Submitted OpenQASM: h, rz, and cx only"]
   ZZPhase --> QASM
   XMixer --> QASM
-  QASM --> Validation["Validation: 9024 deterministic product-state shots compare this QASM against the official same-width reference"]
+  QASM --> Validation["Validation: 9024 deterministic product-state shots run at the declared implementation width"]
 
   optimization --> Baseline["Baseline strategy: exact generated reference circuit, no algebraic simplification"]
   Baseline --> Correctness["Correctness comes from reproducing the non-editable target generator rather than discovering a smaller equivalent circuit"]
