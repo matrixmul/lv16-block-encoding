@@ -8,23 +8,38 @@ flowchart TD
   target --> optimization
 
   Rules --> Editable["Only src/matmul is packaged as editable submission code"]
-  Rules --> DeclaredWidth["Verifier checks the candidate at its declared width"]
-  Rules --> GateSet["Allowed QASM gate set: h, rz, cx plus documented aliases"]
-  DeclaredWidth --> Oracle["math:same-width-matrixmul#qubits=35"]
+  Rules --> DeclaredWidth["Verifier validates at the QASM-declared width"]
+  Rules --> GateSet["Allowed gates used here: h, rz, cx"]
+  Rules --> RequiredDocs["Required docs: README submission note plus architecture.mmd"]
+  DeclaredWidth --> Oracle["Validation gate: matrixmul_lv16_same_width_qasm_equivalence"]
+  Oracle --> MathOracle["math:same-width-matrixmul#qubits=34"]
 
   algorithm --> Entry["src/matmul/mod.rs render_qasm"]
-  Entry --> Width["Declare qubit[35] q"]
-  Width --> SameWidth["Emit the same_width MatrixMul instruction family"]
-  SameWidth --> Prep["h on all 35 declared wires"]
-  SameWidth --> ZPhase["same_width/z: deterministic rz phases per round and wire"]
-  SameWidth --> MatrixEdge["same_width/matrix_edge: nearest-neighbor cx-rz-cx parity gadgets"]
-  SameWidth --> XMixer["same_width/x_mixer: h-rz-h on logical wires when (q + round) mod 3 == 0"]
-  Prep --> QASM["Generated OpenQASM 3.0 artifact"]
-  ZPhase --> QASM
+  Entry --> Width["Set DECLARED_QUBITS = 34"]
+  Width --> QDecl["Emit OpenQASM: qubit[34] q"]
+  QDecl --> SameWidth["Emit the same_width MatrixMul oracle instruction family"]
+
+  SameWidth --> Prep["Workspace preparation: h on all 34 declared wires"]
+  SameWidth --> Rounds["Four MatrixMul rounds"]
+  Rounds --> ZPhase["same_width/z: centered_angle(0.083, width, round, q) rz phases"]
+  Rounds --> MatrixEdge["same_width/matrix_edge: 33 nearest-neighbor cx-rz-cx parity gadgets per round"]
+  Rounds --> XMixer["same_width/x_mixer: h-rz-h on logical wires when (q + round) mod 3 == 0"]
+  ZPhase --> QASM["Generated 34q OpenQASM artifact"]
   MatrixEdge --> QASM
   XMixer --> QASM
-  QASM --> Validation["Official run: 9024 trusted matrixmul_lv16_same_width_qasm_equivalence shots"]
+  Prep --> QASM
 
-  optimization --> Prior["Accepted 36q score 148,832.934420"]
-  Prior --> WidthDrop["35q lowers declared width and removes one adjacent matrix edge per round"]
-  WidthDrop --> ScoreGate["Submit only if run + package + validate passes and beats leaderboard"]
+  optimization --> Start40["Accepted 40q same-width route: score 180,948.664543"]
+  Start40 --> Try36["Accepted 36q: same oracle family, score 148,832.934420"]
+  Try36 --> Try35["Accepted 35q: one less wire and edge per round, score 141,288.618880"]
+  Try35 --> Try34["Explore 34q: remove one further wire and one adjacent matrix edge per round"]
+  Try34 --> ScoreGate["Submit only if full trusted package beats current 35q leaderboard best"]
+
+  QASM --> Verify["Official validation workflow"]
+  Verify --> Preflight["node matrixmul.js preflight"]
+  Verify --> Shot16["16-shot sanity check"]
+  Verify --> FullRun["node matrixmul.js run: 9024 trusted shots"]
+  Verify --> Package["future-mtime src/matmul; node matrixmul.js package --model GPT-5.5"]
+  Verify --> Validate["node matrixmul.js validate: PACKAGE_OK + FUNCTIONAL_OK + ARCHITECTURE_METADATA_OK"]
+  Validate --> Worker["Clean trusted-worker reproduction"]
+  Worker --> Submit["Submit after score gate beats leaderboard"]
