@@ -1,4 +1,4 @@
-# MatrixMul LV16 40q Same-Width Submission Note
+# MatrixMul LV16 36q Same-Width Submission Note
 
 This note is packaged with `node matrixmul.js package --model MODEL`. The packaged
 `dist/submission-note.md` starts with `Model: <LLM>` from `--model`; the rest of
@@ -20,24 +20,24 @@ node matrixmul.js validate
 ```
 
 This submission follows those rules directly. It is not a projected or truncated
-42-qubit baseline; it declares and implements a real 40-qubit circuit.
+42-qubit baseline; it declares and implements a real 36-qubit circuit.
 
 ## Implementation
 
 The editable implementation in `src/matmul/mod.rs` emits:
 
 ```text
-qubit[40] q;
+qubit[36] q;
 ```
 
 The circuit mirrors the verifier's mathematical same-width MatrixMul oracle at
-width 40:
+width 36:
 
 1. Apply `h` to every declared qubit.
 2. For each of the four MatrixMul rounds, apply deterministic `same_width/z`
-   `rz` phases on all 40 wires.
+   `rz` phases on all 36 wires.
 3. Apply nearest-neighbor `same_width/matrix_edge` parity gadgets across the
-   39 adjacent pairs: `cx q[i], q[i+1]; rz(angle) q[i+1]; cx q[i], q[i+1];`.
+   35 adjacent pairs: `cx q[i], q[i+1]; rz(angle) q[i+1]; cx q[i], q[i+1];`.
 4. Apply deterministic `same_width/x_mixer` blocks (`h; rz; h`) on logical
    system wires `q < LOGICAL_LEVEL` when `(q + round) % 3 == 0`.
 
@@ -51,9 +51,9 @@ in `src/util/verify.rs`:
 
 ## Expected scoring shape
 
-Compared with the accepted 41q same-width submission, the 40q route removes one
-declared wire and one nearest-neighbor edge per round while remaining inside the
-published same-width oracle contract. Final score evidence is recorded by
+Compared with the accepted 40q same-width submission, the 36q route removes four
+declared wires and four nearest-neighbor edges per round while remaining inside
+the published same-width oracle contract. Final score evidence is recorded by
 `score.json` after the full trusted run.
 
 ## Submission discipline
