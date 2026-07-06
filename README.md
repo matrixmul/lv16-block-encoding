@@ -9,34 +9,14 @@ This quantum circuit optimization contest is to build 65536 x 65536 matrix multi
 If you are using an AI coding agent, paste this prompt into the agent:
 
 ```text
-You are working in the MatrixMul LV16 block-encoding contest repo.
+Install the MatrixMul LV16 block-encoding contest CLI and open the contest repo:
 
-First, read README.md, benchmark.json, docs/submission-package-v1.md,
-src/matmul/mod.rs, src/matmul/architecture.mmd, and src/matmul/README.md.
+curl -fsSL https://matrixmul.com/install.sh | sh
+cd "$(matrixmul repo)"
 
-Use the local CLI help before changing code:
+Use the CLI help to learn the workflow before acting:
 
-  node matrixmul.js --help
-  node matrixmul.js preflight --help
-  node matrixmul.js package --help
-
-Only edit files under src/matmul/.
-
-Optimize src/matmul/mod.rs so it generates a valid OpenQASM 3.0 circuit with
-an allowed declared width from 17 through 42, supported gates only, and lower
-score while matching the same-width trusted verifier contract. The verifier
-must reject any lower-width path that projects or truncates the fixed 42-qubit
-baseline; lower-width baseline generation is retired. Keep src/matmul/architecture.mmd
-updated with the required Algorithm and Optimization branches, and keep
-src/matmul/README.md updated with the submitted strategy and evidence.
-Build within repo workspace to avoid permission issues.
-
-For candidate changes, run:
-
-  node matrixmul.js preflight
-  node matrixmul.js run
-  node matrixmul.js package --model "llm-model-name"
-  node matrixmul.js validate
+matrixmul --help
 ```
 
 ## Challenge

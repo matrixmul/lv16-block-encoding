@@ -62,6 +62,7 @@ Usage:
   ${CLI_NAME} <command> [options]
 
 Commands:
+  repo         Print the contest repository path
   setup        Build the Rust verifier and generators
   preflight    Cheap source and QASM contract check, no trusted shots
   run          Run the trusted verifier and write score.json
@@ -74,13 +75,52 @@ Commands:
   logs         Print server-side validation logs
   leaderboard  Show ranked submissions
 
+Help:
+  ${CLI_NAME} repo --help
+  ${CLI_NAME} setup --help
+  ${CLI_NAME} preflight --help
+  ${CLI_NAME} run --help
+  ${CLI_NAME} package --help
+  ${CLI_NAME} validate --help
+  ${CLI_NAME} submit --help
+  ${CLI_NAME} login --help
+  ${CLI_NAME} config --help
+  ${CLI_NAME} status --help
+  ${CLI_NAME} logs --help
+  ${CLI_NAME} leaderboard --help
+
+Agent workflow:
+  Read README.md, benchmark.json, docs/submission-package-v1.md,
+  src/matmul/mod.rs, src/matmul/architecture.mmd, and src/matmul/README.md.
+
+  Only edit files under ${REQUIRED_EDITABLE_PATHS[0]}.
+
+  Optimize src/matmul/mod.rs so it generates a valid OpenQASM 3.0 circuit with
+  an allowed declared width from 17 through 42, supported gates only, and lower
+  score while matching the same-width trusted verifier contract. Do not use a
+  lower-width path that projects or truncates the fixed 42-qubit baseline.
+
+  Keep ${REQUIRED_ARCHITECTURE} updated with the required Algorithm and
+  Optimization branches, and keep src/matmul/README.md updated with the
+  submitted strategy and evidence. Build within the repository workspace to
+  avoid permission issues.
+
 Local loop:
   1. Edit source files under ${REQUIRED_EDITABLE_PATHS[0]}.
   2. Keep ${REQUIRED_ARCHITECTURE} updated with Algorithm and Optimization branches that explain the submission.
-  3. Run node ${CLI_SCRIPT} preflight.
-  4. Run node ${CLI_SCRIPT} run only for score candidates. It evaluates all ${REQUIRED_SHOTS} shots.
-  5. Run node ${CLI_SCRIPT} package --model "<model>".
-  6. Run node ${CLI_SCRIPT} validate before submitting.`,
+  3. Run ${CLI_NAME} preflight.
+  4. Run ${CLI_NAME} run only for score candidates. It evaluates all ${REQUIRED_SHOTS} shots.
+  5. Run ${CLI_NAME} package --model "<model>".
+  6. Run ${CLI_NAME} validate before submitting.`,
+
+  repo: `${CLI_NAME} repo
+
+Usage:
+  ${CLI_NAME} repo
+  node ${CLI_SCRIPT} repo
+
+Prints the contest repository root used by the installed CLI wrapper. Use
+\`cd "$(${CLI_NAME} repo)"\` after installing from https://matrixmul.com/install.sh.`,
 
   setup: `${CLI_NAME} setup
 
@@ -999,6 +1039,10 @@ async function main() {
   const args = [first, ...rest].filter(Boolean);
   if (first === "--help" || first === "-h") usage(0, command);
 
+  if (command === "repo") {
+    console.log(__dirname);
+    return;
+  }
   if (command === "setup") return runManifestCommand("setupCommand");
   if (command === "preflight") return preflight(args);
   if (command === "run") return runTrusted(args);
