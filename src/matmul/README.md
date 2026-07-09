@@ -1,23 +1,23 @@
-# MatrixMul LV16 34q Same-Width Submission Note
+# MatrixMul LV16 32q Same-Width Submission Note
 
-This note documents the 34-qubit `matrixmul-lv16-varq-v3` score-beat candidate.
+This note documents the 32-qubit `matrixmul-lv16-varq-v3` score-beat candidate.
 It is packaged by `node matrixmul.js package --model MODEL`; the generated
 `dist/submission-note.md` prepends `Model: <LLM>` and then includes this file.
 
 ## Summary
 
-The candidate is a declared-width **34q same-width MatrixMul oracle**. It does
+The candidate is a declared-width **32q same-width MatrixMul oracle**. It does
 not project, truncate, or pad a 42q baseline circuit. The generated QASM declares:
 
 ```text
-qubit[34] q;
+qubit[32] q;
 ```
 
-The target score is a strict beat of the accepted 35q leaderboard best:
+The target is a strict score beat of the accepted 34q leaderboard best:
 
 ```text
-previous best: 141288.61887993666
-candidate route: same-width oracle at 34 declared qubits
+current best before this exploration: 133938.1743641446
+candidate route: same-width oracle at 32 declared qubits
 ```
 
 ## Contest-rule basis
@@ -41,20 +41,23 @@ node matrixmul.js package --model "GPT-5.5"
 node matrixmul.js validate
 ```
 
+This submission follows those rules directly: the declared width is the actual
+implementation width, and every operation addresses only `q[0]` through `q[31]`.
+
 ## Algorithm
 
 `src/matmul/mod.rs` emits the verifier's same-width MatrixMul instruction family
-for `DECLARED_QUBITS = 34`.
+for `DECLARED_QUBITS = 32`.
 
 The circuit construction is deterministic:
 
-1. **Declare width:** emit `qubit[34] q;`.
+1. **Declare width:** emit `qubit[32] q;`.
 2. **Prepare workspace:** apply `h` to every declared qubit.
 3. **Four MatrixMul rounds:** for each `round in 0..ROUND_COUNT`:
-   - apply `same_width/z` phases on all 34 wires with
+   - apply `same_width/z` phases on all 32 wires with
      `centered_angle(0.083, ["same_width", "z", width, round, q])`;
    - apply nearest-neighbor `same_width/matrix_edge` parity gadgets across the
-     33 adjacent pairs:
+     31 adjacent pairs:
      `cx q[i], q[i+1]; rz(angle) q[i+1]; cx q[i], q[i+1];`;
    - apply `same_width/x_mixer` blocks (`h; rz; h`) on logical system wires
      `q < LOGICAL_LEVEL` when `(q + round) % 3 == 0`.
@@ -62,8 +65,8 @@ The circuit construction is deterministic:
    `centered_angle` helper and the same domain strings used by
    `build_same_width_matrixmul_oracle_instructions` in `src/util/verify.rs`.
 
-This keeps the candidate exactly aligned with the mathematical same-width oracle
-at 34 declared qubits.
+This keeps the candidate aligned with the mathematical same-width oracle at 32
+qubits instead of relying on an external projected reference.
 
 ## Optimization workflow
 
@@ -75,19 +78,20 @@ published verifier contract:
 | Accepted 40q | same-width oracle route | `180948.66454328975` |
 | Accepted 36q | same oracle family with four fewer wires | `148832.93441977148` |
 | Accepted 35q | reduce one more wire and matrix edge per round | `141288.61887993666` |
-| Candidate 34q | reduce one further wire and matrix edge per round | validated before submit |
+| Accepted 34q | reduce one further wire and matrix edge per round | `133938.1743641446` |
+| Candidate 32q | remove two more wires and two edge gadgets per round vs 34q | validated before submit |
 
-The score should drop because the declared width is lower and the 34q
-construction removes one adjacent `matrix_edge` parity gadget per round compared
-with 35q, while preserving the same declared-width oracle semantics.
+The score is expected to drop because the declared width is lower and the 32q
+construction removes two adjacent `matrix_edge` parity gadgets per round compared
+with 34q, while preserving the same declared-width oracle semantics.
 
-## 34q expected metric shape
+## 32q expected metric shape
 
 The same-width oracle has:
 
 - one initial `h` per declared wire;
 - four `same_width/z` rotations per wire;
-- four rounds of 33 edge gadgets, each with two `cx` and one `rz`;
+- four rounds of 31 edge gadgets, each with two `cx` and one `rz`;
 - the same 22 logical `x_mixer` blocks because `LOGICAL_LEVEL` stays fixed.
 
 Final counts and score are recorded by `score.json` after the full trusted run.

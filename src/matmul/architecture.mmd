@@ -12,19 +12,19 @@ flowchart TD
   Rules --> GateSet["Allowed gates used here: h, rz, cx"]
   Rules --> RequiredDocs["Required docs: README submission note plus architecture.mmd"]
   DeclaredWidth --> Oracle["Validation gate: matrixmul_lv16_same_width_qasm_equivalence"]
-  Oracle --> MathOracle["math:same-width-matrixmul#qubits=34"]
+  Oracle --> MathOracle["math:same-width-matrixmul#qubits=32"]
 
   algorithm --> Entry["src/matmul/mod.rs render_qasm"]
-  Entry --> Width["Set DECLARED_QUBITS = 34"]
-  Width --> QDecl["Emit OpenQASM: qubit[34] q"]
+  Entry --> Width["Set DECLARED_QUBITS = 32"]
+  Width --> QDecl["Emit OpenQASM: qubit[32] q"]
   QDecl --> SameWidth["Emit the same_width MatrixMul oracle instruction family"]
 
-  SameWidth --> Prep["Workspace preparation: h on all 34 declared wires"]
+  SameWidth --> Prep["Workspace preparation: h on all 32 declared wires"]
   SameWidth --> Rounds["Four MatrixMul rounds"]
   Rounds --> ZPhase["same_width/z: centered_angle(0.083, width, round, q) rz phases"]
-  Rounds --> MatrixEdge["same_width/matrix_edge: 33 nearest-neighbor cx-rz-cx parity gadgets per round"]
+  Rounds --> MatrixEdge["same_width/matrix_edge: 31 nearest-neighbor cx-rz-cx parity gadgets per round"]
   Rounds --> XMixer["same_width/x_mixer: h-rz-h on logical wires when (q + round) mod 3 == 0"]
-  ZPhase --> QASM["Generated 34q OpenQASM artifact"]
+  ZPhase --> QASM["Generated 32q OpenQASM artifact"]
   MatrixEdge --> QASM
   XMixer --> QASM
   Prep --> QASM
@@ -32,8 +32,9 @@ flowchart TD
   optimization --> Start40["Accepted 40q same-width route: score 180,948.664543"]
   Start40 --> Try36["Accepted 36q: same oracle family, score 148,832.934420"]
   Try36 --> Try35["Accepted 35q: one less wire and edge per round, score 141,288.618880"]
-  Try35 --> Try34["Explore 34q: remove one further wire and one adjacent matrix edge per round"]
-  Try34 --> ScoreGate["Submit only if full trusted package beats current 35q leaderboard best"]
+  Try35 --> Try34["Accepted 34q: one less wire and edge per round, score 133,938.174364"]
+  Try34 --> Try32["Explore 32q: remove two more wires and two adjacent matrix-edge gadgets per round"]
+  Try32 --> ScoreGate["Submit only if full trusted package beats current 34q leaderboard best"]
 
   QASM --> Verify["Official validation workflow"]
   Verify --> Preflight["node matrixmul.js preflight"]
