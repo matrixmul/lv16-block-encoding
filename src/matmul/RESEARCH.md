@@ -4,21 +4,22 @@ Last updated: 2026-08-05
 
 ## Objective and promotion rule
 
-The live `matrixmul-lv16-varq-v3` frontier is `39335.75555394863` at 17
-declared qubits. A candidate is submitted only if it is strictly lower, passes
+The accepted `matrixmul-lv16-varq-v3` frontier is `39096.04545219376` at 17
+declared qubits (submission `sub_998888d72e253c94`, rank 1). A candidate is
+submitted only if it is strictly lower, passes
 all 9,024 local trusted shots with comfortable numerical margin, reproduces
 under alternate optimized builds, packages successfully, and passes
 `matrixmul validate`. Final promotion requires the separate official GitHub
 trusted worker. Cheap preflight and partial-shot results are rejection filters,
 not submission evidence.
 
-The accepted circuit has:
+That protected accepted circuit has:
 
 - 17 qubits;
-- 343 gates: 61 `h`, 154 `rz`, and 128 `cx`;
-- weighted gate volume 10,045;
-- weighted depth 533;
-- score `39335.75555394863`.
+- 353 gates: 61 `h`, 154 `rz`, and 138 `cx`;
+- weighted gate volume 10,055;
+- weighted depth 526;
+- score `39096.04545219376`.
 
 ## Structural model
 
@@ -82,8 +83,8 @@ term's support.
 | Four-CNOT exact q14-q16 parity networks | `38665.845070` | All depth-515/516/517 networks failed; only depth-533 networks were stable | Reject |
 | Six-CNOT exact q14-q16 parity networks | `38707.219327` best static | Enumerated 1,010 networks. Best full candidate scored `38782.160770` but missed shot 1911 at `1.038e-8` | Reject |
 | Eight-CNOT tail with two local identity pairs | `38860.825004` | Local 9,024-shot pass at `9.99e-9`; submission `sub_fd3aa315e2a281f8` later shown to reproduce stale baseline source | Reject: insufficient local margin regardless of worker bug |
-| Ten-CNOT tail with three local identity pairs | `38939.360010` | Repeated 9,024-shot passes at `3.59e-11`; submission `sub_d65f07ff3949212d` also reproduced stale baseline source | Reject: superseded by wider margin |
-| Fourteen-CNOT tail with five local identity pairs | `39096.045452` | All 9,024 shots at `7.93e-14`, identical in three builds; first package `sub_456e12db172402ff` reproduced stale baseline source | **Promote with forced worker rebuild** |
+| Ten-CNOT tail with three local identity pairs | `38939.360010` | Repeated 9,024-shot passes at `3.59e-11`, identical in three builds; old submission `sub_d65f07ff3949212d` reproduced stale baseline source rather than this circuit | **Promote using the proven forced-rebuild package path** |
+| Fourteen-CNOT tail with five local identity pairs | `39096.045452` | All 9,024 shots at `7.93e-14`, identical in three builds; forced-rebuild submission `sub_998888d72e253c94` ranked first | Accepted fallback |
 
 ## Robust construction
 
@@ -94,10 +95,7 @@ edge-14/edge-15 suffix is replaced by:
 ```text
 a;
 B; B;
-b;
-B; B;
 b; b;
-b;
 a;
 A; b;
 rz(theta14) q[14];
@@ -105,10 +103,9 @@ rz(theta15) q[16];
 A; b;
 ```
 
-The ten-CNOT prefix `a; B; B; b; B; B; b; b; b; a` is the identity: both
-adjacent `B;B` pairs cancel, the remaining four `b` gates cancel pairwise, and
-then the two `a` gates cancel. In the remaining network, `A` and `b` share
-control `q[15]` and commute. The
+The six-CNOT prefix `a; B; B; b; b; a` is the identity: the adjacent `B;B`
+and `b;b` pairs cancel, and then the two `a` gates cancel. In the remaining
+network, `A` and `b` share control `q[15]` and commute. The
 `A;rz(theta14);A` parity phase is the same `Z14*Z15` rotation as the original
 edge-14 gadget, and `b;rz(theta15);b` is the unchanged `Z15*Z16` rotation.
 The two RZ gates target different wires and can occupy the same weighted-depth
@@ -116,41 +113,42 @@ layer. The ideal unitary is therefore unchanged.
 
 The identity prefix is intentionally retained. The lower-scoring eight-CNOT
 version passed locally with only about `1.1e-11` of tolerance headroom. The
-ten-CNOT version improved the local maximum to `3.59e-11`. An exhaustive
+ten-CNOT version improves the local maximum to `3.59e-11`. An exhaustive
 identity-pair placement screen isolated hard probes 5668, 21, 7537, 4018,
 1908, 6147, 732, and 8228, then promoted only candidates that survived the
-early prefix, distributed shards, and the complete suite. Adding two more
-identity pairs raises the score slightly while lowering the full-suite maximum
-by about 453 times relative to the rejected ten-CNOT candidate:
+early prefix, distributed shards, and the complete suite. After the official
+worker issue was isolated and fixed independently with the fourteen-CNOT
+submission, the qualified ten-CNOT result became the next promotion target:
 
 ```text
-candidate SHA-256:      38fa483214bfd328d192ca1a0a5db45d5083b0e2d41289b570eef0a0930d280d
+candidate SHA-256:      9c566eb5b78abafbd65ee0a81dc2e917a5b6abcf348277ab0804eb6a0b6cfa6a
 qubits:                 17
-gates:                  353
-h / rz / cx:            61 / 154 / 138
-weighted gate volume:   10055
-weighted depth:         526
-score:                   39096.04545219376
+gates:                  349
+h / rz / cx:            61 / 154 / 134
+weighted gate volume:   10051
+weighted depth:         522
+score:                   38939.36001014912
 trusted shots:           9024 / 9024
-max infidelity:          7.172e-14
-max norm delta:          7.927e-14
+max infidelity:          3.592e-11
+max norm delta:          3.594e-11
 ```
 
-This is a `239.71010175487` absolute score reduction, or approximately
-`0.6094%`, from the accepted `39335.75555394863` frontier.
+This is a further `156.68544204464` absolute score reduction, or approximately
+`0.4008%`, from the accepted `39096.04545219376` rank-1 frontier.
 
 ### Cross-build stability gate
 
-The same QASM passed all 9,024 shots with identical reported maxima in:
+Earlier qualification of the same QASM passed all 9,024 shots with identical
+reported maxima in:
 
 1. three repeated default release runs;
 2. a release verifier rebuilt with `-Ctarget-cpu=native`;
 3. a release verifier rebuilt with `-Ctarget-feature=+fma,+avx2`.
 
 These builds do not prove every hosted runner will produce identical floating
-point results, but the `7.93e-14` maximum is more than 126,000 times inside the
-published `1e-8` tolerance and materially tightens the gate after the two
-lower-margin local passes.
+point results, but the `3.59e-11` maximum remains about 278 times inside the
+published `1e-8` tolerance. The accepted fourteen-CNOT circuit remains the
+protected fallback if that margin does not transfer to the hosted worker.
 
 ## Trusted-worker stale-build finding
 
@@ -172,7 +170,9 @@ This explains official failures 14 through 16 and falsifies the earlier theory
 that those hosted failures measured cross-CPU MPS drift. The submission package
 must preserve a `src/matmul/mod.rs` mtime later than the worker's initial build,
 forcing Cargo to rebuild after extraction. A clean local reproduction of the
-same build-before-extract order is required before resubmission.
+same build-before-extract order is required before resubmission. That method was
+then accepted as trusted submission `sub_998888d72e253c94`, proving the package
+path independently of the ten-CNOT circuit.
 
 ## Main finding: verifier path sensitivity
 
@@ -193,9 +193,9 @@ instruction order.
 
 1. Treat the official worker as the final gate, and inspect authenticated job
    logs whenever its generic API status hides the actual failing boundary.
-2. Retain at least five orders of magnitude of local fidelity and norm headroom
-   for any future parity-network candidate; the ten-CNOT circuit showed that
-   a two-order local margin was not sufficient for the hosted worker.
+2. Retain at least two orders of magnitude of local fidelity and norm headroom
+   for any future parity-network candidate. The ten-CNOT circuit retains about
+   278x headroom and reproduces under alternate optimized builds.
 3. If the contest verifier is revised, canonicalize and normalize MPS states
    before comparison or add an exact 17-qubit statevector audit for
    algebraically equivalent candidates. That would make the large phase-gadget

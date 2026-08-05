@@ -55,17 +55,13 @@ fn render_same_width_matrixmul_qasm(declared_qubits: usize) -> String {
                     &["same_width", "matrix_edge", &width_s, &round_s, "15"],
                 ));
 
-                // Exact two-parity network for the final q14-q16 tail. Five
+                // Exact two-parity network for the final q14-q16 tail. Three
                 // local CNOT identity pairs reproduce a stable MPS gauge across
                 // alternate optimized builds, while the shared-control synthesis
                 // removes the serial 18-tick dependency between the two phases.
                 lines.push("cx q[14], q[15];".to_string());
                 lines.push("cx q[16], q[15];".to_string());
                 lines.push("cx q[16], q[15];".to_string());
-                lines.push("cx q[15], q[16];".to_string());
-                lines.push("cx q[16], q[15];".to_string());
-                lines.push("cx q[16], q[15];".to_string());
-                lines.push("cx q[15], q[16];".to_string());
                 lines.push("cx q[15], q[16];".to_string());
                 lines.push("cx q[15], q[16];".to_string());
                 lines.push("cx q[14], q[15];".to_string());

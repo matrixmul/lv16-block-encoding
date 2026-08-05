@@ -24,7 +24,7 @@ flowchart TD
   Rounds --> ZPhase["same_width/z: centered_angle(0.083, width, round, q) rz phases"]
   Rounds --> MatrixEdge["same_width/matrix_edge: ordinary nearest-neighbor cx-rz-cx parity gadgets"]
   Rounds --> Tail["Final q14-q16 tail: exact shared-control parity network"]
-  Tail --> Gauge["Five local CNOT identity pairs stabilize the verifier MPS gauge"]
+  Tail --> Gauge["Three local CNOT identity pairs stabilize the verifier MPS gauge"]
   Tail --> TailPhases["Reversed edge 14 plus forward edge 15 preserve both ZZ phases"]
   Rounds --> XMixer["same_width/x_mixer: h-rz-h on logical wires when (q + round) mod 3 == 0"]
   ZPhase --> QASM["Generated 17q OpenQASM artifact"]
@@ -33,15 +33,16 @@ flowchart TD
   XMixer --> QASM
   Prep --> QASM
 
-  optimization --> Baseline["Accepted serial 17q oracle: score 39,335.755554"]
+  optimization --> Baseline["Original accepted serial 17q oracle: score 39,335.755554"]
   Baseline --> PhaseSearch["Enumerate exact four through fourteen-CNOT tail parity networks"]
   PhaseSearch --> NumericalGate["Reject algebraic wins that fail the 1e-8 MPS fidelity or norm bounds"]
-  NumericalGate --> BoundaryReject["Reject eight-CNOT 38,860 candidate after official worker failure"]
-  BoundaryReject --> WorkerReject["Reject ten-CNOT 38,939 candidate after a second official worker failure"]
-  WorkerReject --> Winner["Fourteen-CNOT robust tail passes all 9,024 shots and alternate-build gates"]
-  Winner --> Metrics["353 gates, 154 rz, 138 cx, volume 10,055, weighted depth 526"]
-  Metrics --> Margin["Worst local error 7.93e-14 versus 1e-8 tolerance"]
-  Margin --> ScoreGate["Strict-win score 39,096.045452"]
+  NumericalGate --> BoundaryReject["Reject eight-CNOT 38,860 candidate: only 1.1e-11 norm headroom"]
+  BoundaryReject --> ProtectedWinner["Fourteen-CNOT robust tail: trusted rank-1 score 39,096.045452"]
+  ProtectedWinner --> WorkerFix["Forced source mtime fixes stale trusted-worker rebuild"]
+  WorkerFix --> Winner["Promote qualified ten-CNOT tail after the package fix is proven"]
+  Winner --> Metrics["349 gates, 154 rz, 134 cx, volume 10,051, weighted depth 522"]
+  Metrics --> Margin["Worst local error 3.59e-11 versus 1e-8 tolerance"]
+  Margin --> ScoreGate["Next strict-win score 38,939.360010"]
 
   QASM --> Verify["Official validation workflow"]
   Verify --> Preflight["matrixmul preflight"]

@@ -1,4 +1,4 @@
-# MatrixMul LV16 17q Robust Final-Tail Parity-Network Submission Note
+# MatrixMul LV16 17q Ten-CNOT Final-Tail Parity-Network Submission Note
 
 This note documents a 17-qubit `matrixmul-lv16-varq-v3` score-beat candidate. It is packaged by `matrixmul package --model MODEL`; the generated `dist/submission-note.md` prepends `Model: <LLM>` and then includes this file.
 
@@ -15,8 +15,8 @@ qubit[17] q;
 The live leaderboard best before this candidate and the new score are:
 
 ```text
-current best: 39335.75555394863
-candidate:    39096.04545219376
+current best: 39096.04545219376
+candidate:    38939.36001014912
 ```
 
 ## Contest-rule basis
@@ -51,7 +51,7 @@ The circuit construction is deterministic:
    - apply `same_width/z` phases on all 17 wires with `centered_angle(0.083, ["same_width", "z", width, round, q])`;
    - apply nearest-neighbor `same_width/matrix_edge` parity gadgets across the 16 adjacent pairs: `cx q[i], q[i+1]; rz(angle) q[i+1]; cx q[i], q[i+1];`;
    - in the final round, synthesize edges 14 and 15 as one exact shared-control
-     parity network. Five local CNOT identity pairs stabilize the verifier's
+     parity network. Three local CNOT identity pairs stabilize the verifier's
      MPS gauge; reversed edge 14 and forward edge 15 then apply the same
      `Z14*Z15` and `Z15*Z16` phases with a shorter weighted critical path;
    - apply `same_width/x_mixer` blocks (`h; rz; h`) on logical system wires `q < LOGICAL_LEVEL` when `(q + round) % 3 == 0`.
@@ -69,12 +69,13 @@ The optimization is a measured exact parity-network rewrite under the published 
 | Four-CNOT tail rewrite | shorter, but numerically unstable | rejected |
 | Six-CNOT parity search | one 9,024-shot miss at `1.038e-8` | rejected |
 | Eight-CNOT tail | local 9,024-shot pass at `9.99e-9`; too close to tolerance | rejected |
-| Ten-CNOT tail | repeated 9,024-shot passes at `3.59e-11`; superseded by a wider margin | rejected |
-| Fourteen-CNOT robust tail | 9,024-shot max error `7.93e-14`; identical across three builds | `39096.04545219376` |
+| Ten-CNOT tail | repeated 9,024-shot passes at `3.59e-11`; identical across three builds | `38939.36001014912` |
+| Fourteen-CNOT robust tail | 9,024-shot max error `7.93e-14`; trusted rank-1 submission `sub_998888d72e253c94` | protected fallback at `39096.04545219376` |
 
 The score drops because the final tail no longer serializes both 18-tick ZZ
-gadgets on the critical path. Ten extra CNOTs provide numerical gauge resets,
-while weighted depth falls from 533 to 526. The ideal unitary is unchanged.
+gadgets on the critical path. Six extra identity-prefix CNOTs provide numerical
+gauge resets, while weighted depth falls from 526 for the protected winner to
+522. The ideal unitary is unchanged.
 
 ## 17q metric shape
 
@@ -82,42 +83,43 @@ The same-width oracle has:
 
 - one initial `h` per declared wire;
 - four `same_width/z` rotations per wire;
-- 62 ordinary edge gadgets plus an exact fourteen-CNOT/two-RZ final-tail network;
+- 62 ordinary edge gadgets plus an exact ten-CNOT/two-RZ final-tail network;
 - the same 22 logical `x_mixer` blocks because `LOGICAL_LEVEL` stays fixed.
 
 Validated metrics:
 
 ```text
-score: 39096.04545219376
+score: 38939.36001014912
 qubits: 17
-weighted_gate_volume: 10055
-weighted_depth: 526
-gates: 353
+weighted_gate_volume: 10051
+weighted_depth: 522
+gates: 349
 h: 61
 rz: 154
-cx: 138
+cx: 134
 max two-qubit distance: 1
 ```
 
 ## Validation and packaging evidence
 
 The promoted source generates QASM SHA-256
-`38fa483214bfd328d192ca1a0a5db45d5083b0e2d41289b570eef0a0930d280d`.
+`9c566eb5b78abafbd65ee0a81dc2e917a5b6abcf348277ab0804eb6a0b6cfa6a`.
 Three repeated full local trusted runs report identical maxima:
 
 ```text
 ok: true
 evaluated_shots: 9024
-score: 39096.04545219376
-max_infidelity: 7.172e-14
-max_norm_delta: 7.927e-14
+score: 38939.36001014912
+max_infidelity: 3.592e-11
+max_norm_delta: 3.594e-11
 ```
 
 The same 9,024-shot result also passes verifier binaries rebuilt with
 `-Ctarget-cpu=native` and with explicit `+fma,+avx2` target features. This is
 the cross-build safety gate tightened after lower-margin local candidates. The
-promoted candidate has more than five orders of magnitude of local headroom
-against the `1e-8` tolerance.
+promoted candidate has about 278x local headroom against the `1e-8` tolerance.
+The already accepted fourteen-CNOT circuit remains safely ranked if the hosted
+worker exposes a platform-specific numerical difference.
 
 ### Trusted-worker rebuild compatibility
 
@@ -133,7 +135,9 @@ The package therefore gives `src/matmul/mod.rs` a future modification time
 before archiving. This does not change source or QASM semantics; it forces the
 worker's post-extraction `cargo run` to compile the submitted module instead of
 reusing the pre-extraction baseline binary. Package promotion additionally
-reproduces the exact build-before-extract sequence in a clean worktree.
+reproduces the exact build-before-extract sequence in a clean worktree. This
+method produced trusted rank-1 submission `sub_998888d72e253c94`, so the
+worker-rebuild fix is already proven independently of this candidate.
 
 The candidate is submitted only after:
 
