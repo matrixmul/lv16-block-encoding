@@ -200,7 +200,9 @@ Usage:
   leaderboard: `${CLI_NAME} leaderboard
 
 Usage:
-  node ${CLI_SCRIPT} leaderboard [--track ${REQUIRED_BENCHMARK}]`
+  node ${CLI_SCRIPT} leaderboard [--track ${REQUIRED_BENCHMARK}] [--json]
+
+Pass --json to print the complete API response for automation.`
 };
 
 function usage(exitCode = 0, command = "main") {
@@ -1023,6 +1025,10 @@ async function logs(id, args) {
 async function leaderboard(args) {
   const track = getFlag(args, "--track", repoManifest().name);
   const response = await requestJson(`${apiUrl(args)}/api/leaderboard?track_id=${encodeURIComponent(track)}`);
+  if (hasFlag(args, "--json")) {
+    console.log(JSON.stringify(response, null, 2));
+    return;
+  }
   if (!response.rows.length) {
     console.log("No accepted submissions yet.");
     return;

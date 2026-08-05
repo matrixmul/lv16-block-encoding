@@ -8,6 +8,7 @@
     "matrixmul": "matrixmul.js"
   },
   "scripts": {
+    "test": "node --test tests/*.test.js",
     "preflight": "node matrixmul.js preflight",
     "run": "node matrixmul.js run",
     "package": "node matrixmul.js package",

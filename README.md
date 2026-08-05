@@ -334,6 +334,7 @@ logs directly:
 node .\matrixmul.js status SUBMISSION_ID --watch --poll-interval 10
 node .\matrixmul.js logs SUBMISSION_ID
 node .\matrixmul.js leaderboard
+node .\matrixmul.js leaderboard --json  # complete API response for automation
 ```
 
 The package command writes `dist/submission.tar.gz`,
