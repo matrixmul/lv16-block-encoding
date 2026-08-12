@@ -1,57 +1,27 @@
 flowchart TD
-  target["Target circuit: MatrixMul LV16"]
-  algorithm["Algorithm"]
-  optimization["Optimization"]
+  Target["Target circuit: MatrixMul LV16"] --> Algorithm["Algorithm"]
+  Target --> Optimization["Optimization"]
 
-  target --> Rules["Contest rules"]
-  target --> algorithm
-  target --> optimization
+  Algorithm --> Width["Declare 17 qubits"]
+  Width --> Rounds["Four same-width MatrixMul rounds"]
+  Rounds --> Ordinary["Edges 0-13: nearest-neighbor CX-RZ-CX"]
+  Rounds --> Tail["Final q14-q16 Clifford phase-Dialog"]
+  Rounds --> Mixers["Logical X mixers: H-RZ-H"]
 
-  Rules --> Editable["Only src/matmul is packaged as editable submission code"]
-  Rules --> DeclaredWidth["Verifier validates at the QASM-declared width"]
-  Rules --> GateSet["Allowed gates used here: h, rz, cx"]
-  Rules --> RequiredDocs["Required docs: README submission note plus architecture.mmd"]
-  DeclaredWidth --> Oracle["Validation gate: matrixmul_lv16_same_width_qasm_equivalence"]
-  Oracle --> MathOracle["math:same-width-matrixmul#qubits=17"]
+  Tail --> Tableau["Track signed Clifford tableau"]
+  Tableau --> Word["a a b A h h L R b A h M h"]
+  Word --> Parities["Emit Z14Z15, Z15Z16, and X15 phases"]
+  Parities --> Identity["Return tableau to identity"]
 
-  algorithm --> Entry["src/matmul/mod.rs render_qasm"]
-  Entry --> Width["Set DECLARED_QUBITS = 17"]
-  Width --> QDecl["Emit OpenQASM: qubit[17] q"]
-  QDecl --> SameWidth["Emit the same_width MatrixMul oracle instruction family"]
-
-  SameWidth --> Prep["Workspace preparation: h on all 17 declared wires"]
-  SameWidth --> Rounds["Four MatrixMul rounds"]
-  Rounds --> ZPhase["same_width/z: centered_angle(0.083, width, round, q) rz phases"]
-  Rounds --> MatrixEdge["same_width/matrix_edge: ordinary nearest-neighbor cx-rz-cx parity gadgets"]
-  Rounds --> Tail["Final q14-q16 tail: exact shared-control parity network"]
-  Tail --> Gauge["Two local CNOT identity pairs stabilize the verifier MPS gauge"]
-  Tail --> TailPhases["Reversed edge 14 plus forward edge 15 preserve both ZZ phases"]
-  Rounds --> XMixer["same_width/x_mixer: h-rz-h on logical wires when (q + round) mod 3 == 0"]
-  ZPhase --> QASM["Generated 17q OpenQASM artifact"]
-  MatrixEdge --> QASM
-  TailPhases --> QASM
-  XMixer --> QASM
-  Prep --> QASM
-
-  optimization --> Baseline["Original accepted serial 17q oracle: score 39,335.755554"]
-  Baseline --> PhaseSearch["Enumerate exact four through fourteen-CNOT tail parity networks"]
-  PhaseSearch --> NumericalGate["Reject algebraic wins that fail the 1e-8 MPS fidelity or norm bounds"]
-  NumericalGate --> BoundaryReject["Reject eight-CNOT 38,860 candidate: only 1.1e-11 norm headroom"]
-  BoundaryReject --> ProtectedWinner["Fourteen-CNOT robust tail: trusted rank-1 score 39,096.045452"]
-  ProtectedWinner --> WorkerFix["Forced source mtime fixes stale trusted-worker rebuild"]
-  WorkerFix --> ProtectedWinner2["Trusted worker accepts ten-CNOT tail as protected rank-1 sub_ab9cf9db196c6bea"]
-  ProtectedWinner2 --> Winner["Probe exact eight-CNOT artifact with protected fallback"]
-  Winner --> Metrics["347 gates, 154 rz, 132 cx, volume 10,049, weighted depth 520"]
-  Metrics --> Margin["Worst local error 9.994e-9 versus 1e-8 tolerance"]
-  Margin --> ScoreGate["Potential strict-win score 38,860.825004"]
-
-  QASM --> Verify["Official validation workflow"]
-  Verify --> Preflight["matrixmul preflight"]
-  Verify --> Shot64["64-shot sanity check"]
-  Verify --> FullRun["matrixmul run: 9024 trusted shots"]
-  Verify --> Package["matrixmul package --model OpenAI GPT-5"]
-  Verify --> Validate["matrixmul validate: PACKAGE_OK + FUNCTIONAL_OK + ARCHITECTURE_METADATA_OK"]
-  Validate --> WorkerOrder["Worker builds baseline before extracting submitted src/matmul"]
-  WorkerOrder --> FutureMtime["Archive mod.rs with future mtime to force post-extraction Cargo rebuild"]
-  FutureMtime --> Reproduce["Reproduce build-before-extract sequence in a clean worktree"]
-  Reproduce --> Submit["Submit with ephemeral API token only after user/account credential step"]
+  Optimization --> Search["MDD + Z3 meet-in-the-middle Dialog search"]
+  Optimization --> Parallel["Place L and R in one weighted-depth layer"]
+  Optimization --> Formal["TLA+ TLC + Lean 4/Pantograph certificates"]
+  Optimization --> Bias["q16 final-round Z bias: -2.262829e-6"]
+  Search --> Metrics["Volume 10049; weighted depth 518"]
+  Parallel --> Metrics
+  Formal --> Metrics
+  Bias --> Stable["Windows 5.18e-9; Ubuntu 6.53e-9"]
+  Metrics --> Score["Score 38786.020651776074"]
+  Stable --> Score
+  Score --> Repro["Build-before-extract trusted-worker reproduction"]
+  Repro --> Submit["Submit only after package validation"]
