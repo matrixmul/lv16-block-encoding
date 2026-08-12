@@ -5,23 +5,21 @@ flowchart TD
   Algorithm --> Width["Declare 17 qubits"]
   Width --> Rounds["Four same-width MatrixMul rounds"]
   Rounds --> Ordinary["Edges 0-13: nearest-neighbor CX-RZ-CX"]
-  Rounds --> Tail["Final q14-q16 Clifford phase-Dialog"]
+  Rounds --> Tail["Final q14-q16 linear transition trace"]
   Rounds --> Mixers["Logical X mixers: H-RZ-H"]
 
-  Tail --> Tableau["Track signed Clifford tableau"]
-  Tableau --> Word["a a b A h h L R b A h M h"]
-  Word --> Parities["Emit Z14Z15, Z15Z16, and X15 phases"]
-  Parities --> Identity["Return tableau to identity"]
+  Tail --> Field["Parity rows over GF(2)"]
+  Field --> Word["a a b A - emit L,R - b A"]
+  Word --> Implicit["Boundary rows expose Z14Z15 and Z15Z16"]
+  Implicit --> Inverse["Replay closes at the identity basis"]
+  Mixers --> Outside["q15 mixer remains outside the Dialog"]
 
-  Optimization --> Search["MDD + Z3 meet-in-the-middle Dialog search"]
+  Optimization --> Search["Enumerate closed small-matrix traces"]
   Optimization --> Parallel["Place L and R in one weighted-depth layer"]
-  Optimization --> Formal["TLA+ TLC + Lean 4/Pantograph certificates"]
   Optimization --> Bias["q16 final-round Z bias: -2.262829e-6"]
-  Search --> Metrics["Volume 10049; weighted depth 518"]
+  Search --> Metrics["Volume 10047; weighted depth 518"]
   Parallel --> Metrics
-  Formal --> Metrics
   Bias --> Stable["Windows 5.18e-9; Ubuntu 6.53e-9"]
-  Metrics --> Score["Score 38786.020651776074"]
+  Metrics --> Score["Score 38782.16077012729"]
   Stable --> Score
-  Score --> Repro["Build-before-extract trusted-worker reproduction"]
-  Repro --> Submit["Submit only after package validation"]
+  Score --> Gate["Package validation and live-score gate"]

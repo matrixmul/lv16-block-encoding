@@ -1,5 +1,12 @@
 # MatrixMul LV16 Optimization Research Ledger
 
+> **Terminology correction (2026-08-12).** Earlier entries in this historical
+> ledger used “Dialog” for Clifford-tableau or Hadamard-word searches. Those
+> objects are not Dialog in the sense of Khattar–Shutty–Gidney et al. The
+> current candidate uses that name only for its ordered trace of small
+> invertible GF(2) transition matrices, with replay, inversion, and implicit
+> parity access. Its surrounding Hadamard/RZ mixer remains outside the Dialog.
+
 Last updated: 2026-08-05
 
 ## Objective and promotion rule
